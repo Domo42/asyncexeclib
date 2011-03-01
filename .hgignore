@@ -1,0 +1,5 @@
+relre:.*\.suo
+relre:.*\.user
+relre:_ReSharper.*
+relre:.*/bin/.*
+relre:.*/obj/.*
