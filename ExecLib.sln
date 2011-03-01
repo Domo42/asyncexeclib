@@ -1,7 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.ExecutionLib", "src\Domo.ExecutionLib\Domo.ExecutionLib.csproj", "{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutionLibTests", "src\ExecutionLibTests\ExecutionLibTests.csproj", "{59963475-E58E-4895-99A2-0A719C461673}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59963475-E58E-4895-99A2-0A719C461673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59963475-E58E-4895-99A2-0A719C461673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59963475-E58E-4895-99A2-0A719C461673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59963475-E58E-4895-99A2-0A719C461673}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
