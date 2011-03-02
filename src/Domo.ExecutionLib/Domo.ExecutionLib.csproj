@@ -40,6 +40,9 @@
     <Reference Include="log4net">
       <HintPath>..\..\ext\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\ext\structuremap\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,11 +55,14 @@
     <Compile Include="Execution\IExecutionQueue.cs" />
     <Compile Include="Execution\IJob.cs" />
     <Compile Include="Execution\IMessageHandlerCreator.cs" />
+    <Compile Include="Execution\MessageHandlerCreator.cs" />
     <Compile Include="Execution\MessageHandlerExecutionJob.cs" />
     <Compile Include="Execution\SingleThreadQueue.cs" />
+    <Compile Include="Execution\WorkingDirectoryScanner.cs" />
     <Compile Include="IExecutionModule.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageHandler.cs" />
+    <Compile Include="IMessageHandlerScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
