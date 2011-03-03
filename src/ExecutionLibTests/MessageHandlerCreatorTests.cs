@@ -3,7 +3,6 @@
    using System.Linq;
    using Domo.ExecutionLib;
    using Domo.ExecutionLib.Execution;
-   using Domo.ExecutionLib.StructureMapBuilder;
    using NUnit.Framework;
    using Rhino.Mocks;
 

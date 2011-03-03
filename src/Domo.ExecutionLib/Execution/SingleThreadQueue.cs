@@ -30,7 +30,7 @@
       /// </summary>
       public SingleThreadQueue()
       {
-         var execThread = new Thread(MessageHandlerExecutionThread);
+         var execThread = new Thread(ExecutionThread);
          execThread.IsBackground = true;
          execThread.Start();
       }
@@ -56,7 +56,7 @@
       /// <summary>
       /// Thread delegate executing the message handlers.
       /// </summary>
-      private void MessageHandlerExecutionThread()
+      private void ExecutionThread()
       {
          while (!_isDisposed)
          {
@@ -73,7 +73,7 @@
             }
             catch (Exception ex)
             {
-               _log.Error("Handler threw an execption.", ex);
+               _log.Error("Execution of job failed.", ex);
             }
          }
       }
