@@ -1,4 +1,4 @@
-﻿namespace Domo.ExecutionLib.StructureMapBuilder
+﻿namespace Domo.ExecutionLib
 {
    using System;
    using StructureMap;
