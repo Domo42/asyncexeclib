@@ -1,7 +1,9 @@
 ﻿namespace ExecutionLibTests
 {
+   using System.Linq;
    using Domo.ExecutionLib;
    using Domo.ExecutionLib.Execution;
+   using Domo.ExecutionLib.StructureMapBuilder;
    using NUnit.Framework;
    using Rhino.Mocks;
 
@@ -14,6 +16,11 @@
       private IMessageHandlerCreator _sut;
 
       /// <summary>
+      /// Instance builder;
+      /// </summary>
+      private IBuilder _builder;
+
+      /// <summary>
       /// Setup for single test.
       /// </summary>
       [SetUp]
@@ -22,7 +29,9 @@
          var scanner = MockRepository.GenerateStub<IMessageHandlerScanner>();
          scanner.Stub(x => x.Scan()).Return(new[] { typeof(SeparateMessgeHandler), typeof(InterfaceMessageHandler), typeof(MessageBaseHandler) });
 
-         _sut = new MessageHandlerCreator(scanner);
+         _builder = new StructureMapBuilder();
+
+         _sut = new MessageHandlerCreator(scanner, _builder);
       }
 
       /// <summary>
@@ -55,11 +64,30 @@
          var msg = new SeparateMessage();
 
          // when
-         var retVal = _sut.Create(msg);
+         var retVal = _sut.Create(msg).ToArray();
 
          // then
          Assert.That(retVal, Has.Some.InstanceOf<InterfaceMessageHandler>());
          Assert.That(retVal, Has.Some.InstanceOf<SeparateMessgeHandler>());
+      }
+
+      /// <summary>
+      /// given => MessageSuperClass msg
+      /// when  => Create is called
+      /// then  => Returns list container base msg handler and IMessage handler.
+      /// </summary>
+      [Test]
+      public void Create_SuperClassMessage_ReturnsMsgBaseHandlerAndIMessageHandlers()
+      {
+         // given
+         var msg = new MessageSuperClass();
+
+         // when
+         var retVal = _sut.Create(msg).ToArray();
+
+         // then
+         Assert.That(retVal, Has.Some.InstanceOf<InterfaceMessageHandler>());
+         Assert.That(retVal, Has.Some.InstanceOf<MessageBaseHandler>());
       }
    }
 }
