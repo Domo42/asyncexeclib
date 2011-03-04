@@ -53,13 +53,13 @@
     <Compile Include="WorkingDirectoryScannerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domo.ExecutionLib.StructureMapBuilder\Domo.ExecutionLib.StructureMapBuilder.csproj">
+    <ProjectReference Include="..\Domo.AsyncExecutionLib.StructureMapBuilder\Domo.AsyncExecutionLib.StructureMapBuilder.csproj">
       <Project>{D636713F-0A84-4A30-92A4-6CA631A8727E}</Project>
-      <Name>Domo.ExecutionLib.StructureMapBuilder</Name>
+      <Name>Domo.AsyncExecutionLib.StructureMapBuilder</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Domo.ExecutionLib\Domo.ExecutionLib.csproj">
+    <ProjectReference Include="..\Domo.AsyncExecutionLib\Domo.AsyncExecutionLib.csproj">
       <Project>{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}</Project>
-      <Name>Domo.ExecutionLib</Name>
+      <Name>Domo.AsyncExecutionLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

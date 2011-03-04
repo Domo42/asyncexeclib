@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D636713F-0A84-4A30-92A4-6CA631A8727E}</ProjectGuid>
+    <ProjectGuid>{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Domo.ExecutionLib.StructureMapBuilder</RootNamespace>
-    <AssemblyName>Domo.ExecutionLib.StructureMapBuilder</AssemblyName>
+    <RootNamespace>Domo.AsyncExecutionLib</RootNamespace>
+    <AssemblyName>Domo.AsyncExecutionLib</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,6 +21,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Domo.AsyncExecutionLib.xml</DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,28 +32,39 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Domo.AsyncExecutionLib.xml</DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StructureMap">
-      <HintPath>..\..\ext\structuremap\StructureMap.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\ext\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StructureMapBuilder.cs" />
+    <Compile Include="Execution\ExecutionModule.cs" />
+    <Compile Include="Execution\IExecutionQueue.cs" />
+    <Compile Include="Execution\IJob.cs" />
+    <Compile Include="Execution\IMessageHandlerCreator.cs" />
+    <Compile Include="Execution\MessageHandlerCreator.cs" />
+    <Compile Include="Execution\MessageHandlerExecutionJob.cs" />
+    <Compile Include="Execution\SingleThreadQueue.cs" />
+    <Compile Include="Execution\WorkingDirectoryScanner.cs" />
+    <Compile Include="IBuilder.cs" />
+    <Compile Include="IExecutionModule.cs" />
+    <Compile Include="IMessage.cs" />
+    <Compile Include="IMessageHandler.cs" />
+    <Compile Include="IMessageHandlerScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Domo.ExecutionLib\Domo.ExecutionLib.csproj">
-      <Project>{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}</Project>
-      <Name>Domo.ExecutionLib</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

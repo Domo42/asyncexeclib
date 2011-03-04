@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.ExecutionLib", "src\Domo.ExecutionLib\Domo.ExecutionLib.csproj", "{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutionLibTests", "src\ExecutionLibTests\ExecutionLibTests.csproj", "{59963475-E58E-4895-99A2-0A719C461673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.ExecutionLib.StructureMapBuilder", "src\Domo.ExecutionLib.StructureMapBuilder\Domo.ExecutionLib.StructureMapBuilder.csproj", "{D636713F-0A84-4A30-92A4-6CA631A8727E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.AsyncExecutionLib", "src\Domo.AsyncExecutionLib\Domo.AsyncExecutionLib.csproj", "{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domo.AsyncExecutionLib.StructureMapBuilder", "src\Domo.AsyncExecutionLib.StructureMapBuilder\Domo.AsyncExecutionLib.StructureMapBuilder.csproj", "{D636713F-0A84-4A30-92A4-6CA631A8727E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{59963475-E58E-4895-99A2-0A719C461673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59963475-E58E-4895-99A2-0A719C461673}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59963475-E58E-4895-99A2-0A719C461673}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59963475-E58E-4895-99A2-0A719C461673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D636713F-0A84-4A30-92A4-6CA631A8727E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D636713F-0A84-4A30-92A4-6CA631A8727E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D636713F-0A84-4A30-92A4-6CA631A8727E}.Release|Any CPU.ActiveCfg = Release|Any CPU

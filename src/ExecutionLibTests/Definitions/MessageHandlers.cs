@@ -1,7 +1,7 @@
 ﻿namespace ExecutionLibTests
 {
    using System;
-   using Domo.ExecutionLib;
+   using Domo.AsyncExecutionLib;
 
    public class MessageHandlerBase
    {

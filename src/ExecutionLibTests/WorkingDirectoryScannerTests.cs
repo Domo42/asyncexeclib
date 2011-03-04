@@ -4,8 +4,8 @@
    using System.Collections.Generic;
    using System.IO;
    using System.Linq;
-   using Domo.ExecutionLib;
-   using Domo.ExecutionLib.Execution;
+   using Domo.AsyncExecutionLib;
+   using Domo.AsyncExecutionLib.Execution;
    using NUnit.Framework;
 
    [TestFixture]

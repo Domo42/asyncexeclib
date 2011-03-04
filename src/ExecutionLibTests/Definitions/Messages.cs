@@ -1,6 +1,6 @@
 ﻿namespace ExecutionLibTests
 {
-   using Domo.ExecutionLib;
+   using Domo.AsyncExecutionLib;
 
    /// <summary>
    /// Message base class.
