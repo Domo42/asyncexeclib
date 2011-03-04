@@ -19,6 +19,7 @@
 namespace Domo.AsyncExecutionLib.Execution
 {
    using System;
+   using System.Collections.Concurrent;
 
    /// <summary>
    /// Relays incoming message to the execution queue.
@@ -26,11 +27,40 @@ namespace Domo.AsyncExecutionLib.Execution
    public class ExecutionModule : IExecutionModule
    {
       /// <summary>
+      /// Executes jobs on a separate thread.
+      /// </summary>
+      private readonly IExecutionQueue _execQueue;
+
+      /// <summary>
+      /// Creates message handlers based on message type.
+      /// </summary>
+      private readonly IMessageHandlerCreator _handlerCreator;
+
+      /// <summary>
+      /// Closed handler job types based on message types.
+      /// </summary>
+      private readonly ConcurrentDictionary<Type, Type> _handlerJobTypes = new ConcurrentDictionary<Type,Type>();
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="ExecutionModule"/> class.
+      /// </summary>
+      public ExecutionModule(IExecutionQueue execQueue, IMessageHandlerCreator handlerCreator)
+      {
+         _execQueue = execQueue;
+         _handlerCreator = handlerCreator;
+      }
+
+      /// <summary>
       /// Add a message to be handled.
       /// </summary>
       /// <param name="message">The message</param>
       public void Add(IMessage message)
       {
+         Type msgType = message.GetType();
+         Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));
+
+         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator);
+         _execQueue.Add(job);
       }
 
       /// <summary>

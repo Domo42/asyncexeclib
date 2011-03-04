@@ -22,7 +22,7 @@ namespace Domo.AsyncExecutionLib.Execution
    /// Executes message handlers for the given message.
    /// </summary>
    /// <typeparam name="TMessage">Type of the message to handle.</typeparam>
-   public class MessageHandlerExecutionJob<TMessage> where TMessage : IMessage
+   public class MessageHandlerExecutionJob<TMessage> : IJob where TMessage : IMessage
    {
       /// <summary>
       /// The message to handle.
