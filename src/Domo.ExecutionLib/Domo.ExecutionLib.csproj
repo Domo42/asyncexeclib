@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Execution\ExecutionModule.cs" />
     <Compile Include="Execution\IExecutionQueue.cs" />
     <Compile Include="Execution\IJob.cs" />
     <Compile Include="Execution\IMessageHandlerCreator.cs" />
