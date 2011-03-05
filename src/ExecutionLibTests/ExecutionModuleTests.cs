@@ -74,7 +74,7 @@ namespace ExecutionLibTests
       /// then  => Message handler job added to queue.
       /// </summary>
       [Test]
-      public void AddMessage_Message_AddMessageHandlerJobToQueue()
+      public void Add_Message_AddMessageHandlerJobToQueue()
       {
          // given
          var msg = new SeparateMessage();
@@ -94,7 +94,7 @@ namespace ExecutionLibTests
       /// then  => Message handled is the same instance as added to module.
       /// </summary>
       [Test]
-      public void AddMessage_Message_SameMessageInstanceUsedInHandler()
+      public void Add_Message_SameMessageInstanceUsedInHandler()
       {
          // given
          var msg = new SeparateMessage();
@@ -108,6 +108,49 @@ namespace ExecutionLibTests
 
          // then
          Assert.That(_message, Is.SameAs(msg));
+      }
+
+      /// <summary>
+      /// given => An action delegate.
+      /// when  => Add method called.
+      /// then  => ActionExecution job is added to execution queue.
+      /// </summary>
+      [Test]
+      public void Add_Action_AddActionExecutionJobToQueue()
+      {
+         // given
+         Action action = null;
+
+         // when
+         _sut.Add(action);
+
+         // then
+         var constraint = new ParamConstraint<ActionExecutionJob>();
+         _execQueue.AssertWasCalled(x => x.Add(Arg<IJob>.Matches(constraint)));
+      }
+
+      /// <summary>
+      /// given => An action to be executed.
+      /// when  => Add method with action called.
+      ///          Job is executed.
+      /// then  => job executes given action.
+      /// </summary>
+      [Test]
+      public void Add_Action_JobExecutesAction()
+      {
+         // given
+         bool hasExecuted = false;
+         Action action = () => hasExecuted = true;
+         IJob job = null;
+         Action<IJob> queueAddAction = x => job = x;
+         _execQueue.Stub(x => x.Add(null)).IgnoreArguments().Do(queueAddAction);
+
+         // when
+         _sut.Add(action);
+         job.Execute();
+
+         // then
+         Assert.That(hasExecuted, Is.True, "Job added to execution queue has not executed the correct action.");
       }
 
       #region [ Support ]
