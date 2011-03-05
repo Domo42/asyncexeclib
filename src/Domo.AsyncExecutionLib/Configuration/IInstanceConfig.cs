@@ -16,53 +16,29 @@
 /****************************************************************************/
 #endregion
 
-namespace Domo.AsyncExecutionLib.Execution
+namespace Domo.AsyncExecutionLib.Configuration
 {
    using System;
 
    /// <summary>
-   /// Executes a single action delegate.
+   /// Configuration setting for instances used with IBuilder.
    /// </summary>
-   public class ActionExecutionJob : IJob
+   public interface IInstanceConfig
    {
       /// <summary>
-      /// Action to be executed.
+      /// Gets the type to be created.
       /// </summary>
-      private readonly Action _action;
+      Type PluginType { get; }
 
       /// <summary>
-      /// Responsible to call modules.
+      /// Gets or sets the concrety type of the instance to be created.
       /// </summary>
-      private readonly IModuleManager _moduleManager;
+      Type ConcreteType { get; set; }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="ActionExecutionJob"/> class.
+      /// Gets or sets a value indicating whether the instance should be created
+      /// as a singleton.
       /// </summary>
-      public ActionExecutionJob(Action action, IModuleManager moduleManager)
-      {
-         _action = action;
-         _moduleManager = moduleManager;
-      }
-
-      /// <summary>
-      /// Execute the job.
-      /// </summary>
-      public void Execute()
-      {
-         _moduleManager.OnStart();
-
-         try
-         {
-            _action.Invoke();
-         }
-         catch (Exception ex)
-         {
-            _moduleManager.OnError(ex);
-         }
-         finally
-         {
-            _moduleManager.OnFinished();
-         }
-      }
+      bool? IsSingleton { get; set; }
    }
 }

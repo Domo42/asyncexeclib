@@ -37,6 +37,11 @@ namespace Domo.AsyncExecutionLib.Execution
       private readonly IMessageHandlerCreator _handlerCreator;
 
       /// <summary>
+      /// Managers modules.
+      /// </summary>
+      private readonly IModuleManager _moduleManager;
+
+      /// <summary>
       /// Closed handler job types based on message types.
       /// </summary>
       private readonly ConcurrentDictionary<Type, Type> _handlerJobTypes = new ConcurrentDictionary<Type,Type>();
@@ -44,10 +49,11 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <summary>
       /// Initializes a new instance of the <see cref="ExecutionModule"/> class.
       /// </summary>
-      public ExecutionModule(IExecutionPipe execPipe, IMessageHandlerCreator handlerCreator)
+      public ExecutionModule(IExecutionPipe execPipe, IMessageHandlerCreator handlerCreator, IModuleManager moduleManager)
       {
          _execPipe = execPipe;
          _handlerCreator = handlerCreator;
+         _moduleManager = moduleManager;
       }
 
       /// <summary>
@@ -59,7 +65,7 @@ namespace Domo.AsyncExecutionLib.Execution
          Type msgType = message.GetType();
          Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));
 
-         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator);
+         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator, _moduleManager);
          _execPipe.Add(job);
       }
 
@@ -69,7 +75,7 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <param name="action">The action delegate to execute.</param>
       public void Add(Action action)
       {
-         _execPipe.Add(new ActionExecutionJob(action));
+         _execPipe.Add(new ActionExecutionJob(action, _moduleManager));
       }
    }
 }

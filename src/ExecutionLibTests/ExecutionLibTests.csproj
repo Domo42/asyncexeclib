@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Definitions\MessageHandlers.cs" />
     <Compile Include="Definitions\Messages.cs" />
+    <Compile Include="Definitions\Modules.cs" />
     <Compile Include="Definitions\ParamConstraint.cs" />
     <Compile Include="ExecutionModuleTests.cs" />
     <Compile Include="MessageHandlerCreatorTests.cs" />

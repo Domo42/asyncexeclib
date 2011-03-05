@@ -65,7 +65,7 @@ namespace ExecutionLibTests
          _handlerCreator.Stub(x => x.Create<SeparateMessage>(null))
             .IgnoreArguments().Return(new [] { _handler });
 
-         _sut = new ExecutionModule(_execPipe, _handlerCreator);
+         _sut = new ExecutionModule(_execPipe, _handlerCreator, MockRepository.GenerateStub<IModuleManager>());
       }
 
       /// <summary>

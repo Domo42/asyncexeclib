@@ -19,50 +19,23 @@
 namespace Domo.AsyncExecutionLib.Execution
 {
    using System;
+   using System.Collections.Generic;
 
    /// <summary>
-   /// Executes a single action delegate.
+   /// Scans for available message handler.
    /// </summary>
-   public class ActionExecutionJob : IJob
+   public interface IAssemblyScanner
    {
       /// <summary>
-      /// Action to be executed.
+      /// Scan for message handlers.
       /// </summary>
-      private readonly Action _action;
+      /// <returns>List of available handlers.</returns>
+      IEnumerable<Type> ScanForMessageHandlers();
 
       /// <summary>
-      /// Responsible to call modules.
+      /// Scan for message module types.
       /// </summary>
-      private readonly IModuleManager _moduleManager;
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="ActionExecutionJob"/> class.
-      /// </summary>
-      public ActionExecutionJob(Action action, IModuleManager moduleManager)
-      {
-         _action = action;
-         _moduleManager = moduleManager;
-      }
-
-      /// <summary>
-      /// Execute the job.
-      /// </summary>
-      public void Execute()
-      {
-         _moduleManager.OnStart();
-
-         try
-         {
-            _action.Invoke();
-         }
-         catch (Exception ex)
-         {
-            _moduleManager.OnError(ex);
-         }
-         finally
-         {
-            _moduleManager.OnFinished();
-         }
-      }
+      /// <returns>List of available message modules.</returns>
+      IEnumerable<Type> ScanForMessageModules();
    }
 }

@@ -31,7 +31,7 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <summary>
       /// Scans for message handler types.
       /// </summary>
-      private readonly IMessageHandlerScanner _scanner;
+      private readonly IAssemblyScanner _scanner;
 
       /// <summary>
       /// Builds handler instances.
@@ -51,7 +51,7 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <summary>
       /// Initializes a new instance of the <see cref="MessageHandlerCreator"/> class.
       /// </summary>
-      public MessageHandlerCreator(IMessageHandlerScanner scanner, IBuilder builder)
+      public MessageHandlerCreator(IAssemblyScanner scanner, IBuilder builder)
       {
          _scanner = scanner;
          _builder = builder;
@@ -129,7 +129,7 @@ namespace Domo.AsyncExecutionLib.Execution
       /// </summary>
       private void GroupHandlersByHandledTypes()
       {
-         IEnumerable<Type> messageHandlerTypes = _scanner.Scan();
+         IEnumerable<Type> messageHandlerTypes = _scanner.ScanForMessageHandlers();
          foreach (Type msgHandler in messageHandlerTypes)
          {
             var handlerInterfaceTypes = msgHandler.GetInterfaces().Where(IsMessageHandlerInterface);

@@ -43,8 +43,8 @@ namespace ExecutionLibTests
       [SetUp]
       public void Init()
       {
-         var scanner = MockRepository.GenerateStub<IMessageHandlerScanner>();
-         scanner.Stub(x => x.Scan()).Return(new[] { typeof(SeparateMessgeHandler), typeof(InterfaceMessageHandler), typeof(MessageBaseHandler) });
+         var scanner = MockRepository.GenerateStub<IAssemblyScanner>();
+         scanner.Stub(x => x.ScanForMessageHandlers()).Return(new[] { typeof(SeparateMessgeHandler), typeof(InterfaceMessageHandler), typeof(MessageBaseHandler) });
 
          _builder = new StructureMapBuilder();
 

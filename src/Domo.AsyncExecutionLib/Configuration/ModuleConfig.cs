@@ -19,6 +19,7 @@
 namespace Domo.AsyncExecutionLib.Configuration
 {
    using System;
+   using System.Collections.Generic;
    using System.Diagnostics.CodeAnalysis;
    using Execution;
 
@@ -34,19 +35,9 @@ namespace Domo.AsyncExecutionLib.Configuration
       private IBuilder _builder;
 
       /// <summary>
-      /// The configured handler scanner.
+      /// Instance configuration settings.
       /// </summary>
-      private readonly InstanceConfig<IMessageHandlerScanner> _scanner = new InstanceConfig<IMessageHandlerScanner>();
-
-      /// <summary>
-      /// The execution pipe to be used.
-      /// </summary>
-      private readonly InstanceConfig<IExecutionPipe> _execPipe = new InstanceConfig<IExecutionPipe>();
-
-      /// <summary>
-      /// The creator provided actual handler instances.
-      /// </summary>
-      private readonly InstanceConfig<IMessageHandlerCreator> _handlerCreator = new InstanceConfig<IMessageHandlerCreator>();
+      private readonly Dictionary<Type, IInstanceConfig> _instanceConfigs = new Dictionary<Type, IInstanceConfig>();
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ModuleConfig"/> class.
@@ -54,9 +45,17 @@ namespace Domo.AsyncExecutionLib.Configuration
       public ModuleConfig()
       {
          // set module defaults
-         _scanner.ConcreteType = typeof(WorkingDirectoryScanner);
-         _execPipe.ConcreteType = typeof(SingleThreadPipe);
-         _handlerCreator.ConcreteType = typeof(MessageHandlerCreator);
+         var scanner = new InstanceConfig<IAssemblyScanner> { ConcreteType = typeof(WorkingDirectoryScanner) };
+         _instanceConfigs.Add(scanner.PluginType, scanner);
+
+         var pipe = new InstanceConfig<IExecutionPipe> { ConcreteType = typeof(SingleThreadPipe) };
+         _instanceConfigs.Add(pipe.PluginType, pipe);
+
+         var handleCreator = new InstanceConfig<IMessageHandlerCreator> { ConcreteType = typeof(MessageHandlerCreator) };
+         _instanceConfigs.Add(handleCreator.PluginType, handleCreator);
+
+         var moduleManager = new InstanceConfig<IModuleManager> { ConcreteType = typeof(ModuleManager) };
+         _instanceConfigs.Add(moduleManager.PluginType, moduleManager);
       }
 
       /// <summary>
@@ -76,9 +75,9 @@ namespace Domo.AsyncExecutionLib.Configuration
       /// </summary>
       /// <typeparam name="TScanner">Concrete message handler scanner type.</typeparam>
       /// <returns>Module configuration instance.</returns>
-      public ModuleConfig UseScanner<TScanner>() where TScanner : IMessageHandlerScanner
+      public ModuleConfig UseScanner<TScanner>() where TScanner : IAssemblyScanner
       {
-         _scanner.ConcreteType = typeof(TScanner);
+         _instanceConfigs[typeof(IAssemblyScanner)].ConcreteType = typeof(TScanner);
          return this;
       }
 
@@ -89,10 +88,10 @@ namespace Domo.AsyncExecutionLib.Configuration
       /// <typeparam name="TScanner">Concrete message handler scanner type.</typeparam>
       /// <param name="singleton">Indicates whether to register the scanner as a singleton.</param>
       /// <returns>Module configuration instance.</returns>
-      public ModuleConfig UseScanner<TScanner>(bool singleton) where TScanner : IMessageHandlerScanner
+      public ModuleConfig UseScanner<TScanner>(bool singleton) where TScanner : IAssemblyScanner
       {
-         _scanner.ConcreteType = typeof(TScanner);
-         _scanner.IsSingleton = singleton;
+         _instanceConfigs[typeof(IAssemblyScanner)].ConcreteType = typeof(TScanner);
+         _instanceConfigs[typeof(IAssemblyScanner)].IsSingleton = singleton;
          return this;
       }
 
@@ -104,7 +103,7 @@ namespace Domo.AsyncExecutionLib.Configuration
       /// <returns></returns>
       public ModuleConfig UseExecutionPipe<TPipe>() where TPipe : IExecutionPipe
       {
-         _execPipe.ConcreteType = typeof(TPipe);
+         _instanceConfigs[typeof(IExecutionPipe)].ConcreteType = typeof(TPipe);
          return this;
       }
 
@@ -117,8 +116,8 @@ namespace Domo.AsyncExecutionLib.Configuration
       /// <returns></returns>
       public ModuleConfig UseExecutionPipe<TPipe>(bool singleton) where TPipe : IExecutionPipe
       {
-         _execPipe.ConcreteType = typeof(TPipe);
-         _execPipe.IsSingleton = singleton;
+         _instanceConfigs[typeof(IExecutionPipe)].ConcreteType = typeof(TPipe);
+         _instanceConfigs[typeof(IExecutionPipe)].IsSingleton = singleton;
          return this;
       }
 
@@ -147,11 +146,32 @@ namespace Domo.AsyncExecutionLib.Configuration
          _builder.RegisterInstance(_builder);
 
          RegisterExecModule(singleton);
-         RegisterInstance(singleton, _scanner);
-         RegisterInstance(singleton, _execPipe);
-         RegisterInstance(singleton, _handlerCreator);
+         RegisterDependencies(singleton);
 
          return _builder.GetInstance<IExecutionModule>();
+      }
+
+      /// <summary>
+      /// Register other instance configuration objects.
+      /// </summary>
+      private void RegisterDependencies(bool singleton)
+      {
+         foreach (IInstanceConfig instanceConfig in _instanceConfigs.Values)
+         {
+            if (!instanceConfig.IsSingleton.HasValue)
+            {
+               instanceConfig.IsSingleton = singleton;
+            }
+
+            if (instanceConfig.IsSingleton.Value)
+            {
+               _builder.RegisterSingleton(instanceConfig.PluginType, instanceConfig.ConcreteType);
+            }
+            else
+            {
+               _builder.Register(instanceConfig.PluginType, instanceConfig.ConcreteType);
+            }
+         }
       }
 
       /// <summary>
@@ -166,27 +186,6 @@ namespace Domo.AsyncExecutionLib.Configuration
          else
          {
             _builder.Register(typeof(IExecutionModule), typeof(ExecutionModule));
-         }
-      }
-
-      /// <summary>
-      /// Registers the given instance in the builder.
-      /// </summary>
-      /// <typeparam name="TPluginType">Type to register.</typeparam>
-      private void RegisterInstance<TPluginType>(bool isModuleSingleton, InstanceConfig<TPluginType> instanceConfig)
-      {
-         if (!instanceConfig.IsSingleton.HasValue)
-         {
-            instanceConfig.IsSingleton = isModuleSingleton;
-         }
-
-         if (instanceConfig.IsSingleton.Value)
-         {
-            _builder.RegisterSingleton(instanceConfig.PluginType, instanceConfig.ConcreteType);
-         }
-         else
-         {
-            _builder.Register(instanceConfig.PluginType, instanceConfig.ConcreteType);
          }
       }
    }

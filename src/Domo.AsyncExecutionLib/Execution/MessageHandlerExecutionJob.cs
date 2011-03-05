@@ -18,6 +18,8 @@
 
 namespace Domo.AsyncExecutionLib.Execution
 {
+   using System;
+
    /// <summary>
    /// Executes message handlers for the given message.
    /// </summary>
@@ -35,12 +37,18 @@ namespace Domo.AsyncExecutionLib.Execution
       private readonly IMessageHandlerCreator _handlerCreator;
 
       /// <summary>
+      /// Respsonsible to for message modules.
+      /// </summary>
+      private readonly IModuleManager _moduleManager;
+
+      /// <summary>
       /// Creates a new <see cref="MessageHandlerExecutionJob&lt;T&gt;"/> instance.
       /// </summary>
-      public MessageHandlerExecutionJob(TMessage message, IMessageHandlerCreator handleCreator)
+      public MessageHandlerExecutionJob(TMessage message, IMessageHandlerCreator handleCreator, IModuleManager moduleManager)
       {
          _message = message;
          _handlerCreator = handleCreator;
+         _moduleManager = moduleManager;
       }
 
       /// <summary>
@@ -49,9 +57,23 @@ namespace Domo.AsyncExecutionLib.Execution
       public void Execute()
       {
          var handlers = _handlerCreator.Create(_message);
-         foreach (var handler in handlers)
+
+         _moduleManager.OnStart();
+
+         try
          {
-            handler.Handle(_message);
+            foreach (var handler in handlers)
+            {
+               handler.Handle(_message);
+            }
+         }
+         catch (Exception ex)
+         {
+            _moduleManager.OnError(ex);
+         }
+         finally
+         {
+            _moduleManager.OnFinished();
          }
       }
    }
