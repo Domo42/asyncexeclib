@@ -69,6 +69,7 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <param name="action">The action delegate to execute.</param>
       public void Add(Action action)
       {
+         _execQueue.Add(new ActionExecutionJob(action));
       }
    }
 }
