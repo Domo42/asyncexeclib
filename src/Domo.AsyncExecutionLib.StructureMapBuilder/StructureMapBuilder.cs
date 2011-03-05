@@ -94,5 +94,15 @@ namespace Domo.AsyncExecutionLib
       {
          _container.Configure(x => x.For(pluginType).Use(concreteType));
       }
+
+      /// <summary>
+      /// Registers a specific object instance.
+      /// </summary>
+      /// <typeparam name="T">Type of the object.</typeparam>
+      /// <param name="instance">Instance to register.</param>
+      public void RegisterInstance<T>(T instance)
+      {
+         _container.Configure(x => x.For<T>().Use(instance));
+      }
    }
 }

@@ -58,5 +58,12 @@ namespace Domo.AsyncExecutionLib
       /// <param name="pluginType">The type for which a singleton instances is to be created.</param>
       /// <param name="concreteType">The concrete type implementing the instance type.</param>
       void Register(Type pluginType, Type concreteType);
+
+      /// <summary>
+      /// Registers a specific object instance.
+      /// </summary>
+      /// <typeparam name="T">Type of the object.</typeparam>
+      /// <param name="instance">Instance to register.</param>
+      void RegisterInstance<T>(T instance);
    }
 }

@@ -19,6 +19,7 @@
 namespace Domo.AsyncExecutionLib
 {
    using Configuration;
+   using Execution;
 
    /// <summary>
    /// Used to configure and start the execution module.
@@ -32,6 +33,17 @@ namespace Domo.AsyncExecutionLib
       public static ModuleConfig Configure()
       {
          return new ModuleConfig();
+      }
+
+      /// <summary>
+      /// Configured the module to scan all assemblies in the current working directory
+      /// for message handlers.
+      /// </summary>
+      /// <returns>Module configuration instance.</returns>
+      public static ModuleConfig UseCurrentWorkingDirectoryScanner(this ModuleConfig config)
+      {
+         config.UseScanner<WorkingDirectoryScanner>();
+         return config;
       }
    }
 }
