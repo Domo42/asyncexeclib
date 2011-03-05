@@ -30,7 +30,7 @@
          // message handler will be exeucted on a separate thread,
          // therefore we wait until satisfied.
          Console.WriteLine("Press any key to quit.");
-         Console.Read();
+         Console.ReadKey();
       }
    }
 

@@ -23,7 +23,7 @@ namespace Domo.AsyncExecutionLib.Configuration
    /// <summary>
    /// Holds the configuration for a single instance to be created.
    /// </summary>
-   internal class InstanceConfig<TPluginType>
+   internal class InstanceConfig<TPluginType> : IInstanceConfig
    {
       /// <summary>
       /// Gets the type to be created.

@@ -29,30 +29,42 @@ namespace Domo.AsyncExecutionLib.Execution
    /// Scans all assemblies of the current working directory for
    /// Message handlers.
    /// </summary>
-   public class WorkingDirectoryScanner : IMessageHandlerScanner
+   public class WorkingDirectoryScanner : IAssemblyScanner
    {
-      /// <summary>
-      /// Used for logging.
-      /// </summary>
-      private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
       /// <summary>
       /// Scan for message handlers.
       /// </summary>
       /// <returns>List of available handlers.</returns>
-      public IEnumerable<Type> Scan()
+      public IEnumerable<Type> ScanForMessageHandlers()
+      {
+         return ScanWorkingDirctory(IsMessageHandlerInterface);
+      }
+
+      /// <summary>
+      /// Scan for message module types.
+      /// </summary>
+      /// <returns>List of available message modules.</returns>
+      public IEnumerable<Type> ScanForMessageModules()
+      {
+         return ScanWorkingDirctory(IsMessageModuleInterface);
+      }
+
+      /// <summary>
+      /// Scan the working directory for types matching the predicate.
+      /// </summary>
+      private IEnumerable<Type> ScanWorkingDirctory(Predicate<Type> targetType)
       {
          List<Type> handlerTypes = new List<Type>();
 
          string currentDir = Environment.CurrentDirectory;
          foreach (string file in Directory.GetFiles(currentDir, "*.dll"))
          {
-             handlerTypes.AddRange(ScanPossibleAssembly(file));
+            handlerTypes.AddRange(ScanPossibleAssembly(file, targetType));
          }
 
          foreach (string file in Directory.GetFiles(currentDir, "*.exe"))
          {
-            handlerTypes.AddRange(ScanPossibleAssembly(file));
+            handlerTypes.AddRange(ScanPossibleAssembly(file, targetType));
          }
 
          return handlerTypes;
@@ -61,8 +73,7 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <summary>
       /// Scan the file, which may or may not be an actual assembly.
       /// </summary>
-      /// <param name="fileName"></param>
-      private IEnumerable<Type> ScanPossibleAssembly(string fileName)
+      private IEnumerable<Type> ScanPossibleAssembly(string fileName, Predicate<Type> targeType)
       {
          IEnumerable<Type> handlers = null;
 
@@ -70,11 +81,11 @@ namespace Domo.AsyncExecutionLib.Execution
          {
             AssemblyName assemblyName = AssemblyName.GetAssemblyName(fileName);
             Assembly assembly = Assembly.Load(assemblyName);
-            handlers = ScanAssembly(assembly);
+            handlers = ScanAssembly(assembly, targeType);
          }
          catch (BadImageFormatException)
          {
-            _log.DebugFormat("File is not a .net assembly: {0}", fileName);
+            // file is not a .net assembly.
          }
 
          return handlers ?? new Type[0];
@@ -83,19 +94,16 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <summary>
       /// Scans an assembly for message handler implementations.
       /// </summary>
-      /// <param name="assembly">The assembly to scan.</param>
-      private IEnumerable<Type> ScanAssembly(Assembly assembly)
+      private IEnumerable<Type> ScanAssembly(Assembly assembly, Predicate<Type> targetType)
       {
          List<Type> handlerTypes = new List<Type>();
-
-         _log.InfoFormat("Scanning assembly for message handlers: {0}", assembly.FullName);
 
          foreach (Type t in assembly.GetTypes())
          {
             if (!t.IsAbstract)
             {
                Type[] interfaces = t.GetInterfaces();
-               if (interfaces.Any(IsMessageHandlerInterface))
+               if (interfaces.Any(i => targetType(i)))
                {
                   handlerTypes.Add(t);
                }
@@ -103,6 +111,15 @@ namespace Domo.AsyncExecutionLib.Execution
          }
 
          return handlerTypes;
+      }
+
+      /// <summary>
+      /// Returns true if interface is of type IMessageModule.
+      /// </summary>
+      /// <returns>True if </returns>
+      private bool IsMessageModuleInterface(Type interfaceType)
+      {
+         return interfaceType.IsInterface && typeof(IMessageModule).IsAssignableFrom(interfaceType);
       }
 
       /// <summary>

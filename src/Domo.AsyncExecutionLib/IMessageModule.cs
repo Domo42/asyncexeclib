@@ -16,53 +16,32 @@
 /****************************************************************************/
 #endregion
 
-namespace Domo.AsyncExecutionLib.Execution
+namespace Domo.AsyncExecutionLib
 {
    using System;
 
    /// <summary>
-   /// Executes a single action delegate.
+   /// Classes inheriting from this interface will be called before and after the
+   /// message handling chain executes.
    /// </summary>
-   public class ActionExecutionJob : IJob
+   public interface IMessageModule
    {
       /// <summary>
-      /// Action to be executed.
+      /// Will be called before any message handlers are executed.
       /// </summary>
-      private readonly Action _action;
+      void OnStart();
 
       /// <summary>
-      /// Responsible to call modules.
+      /// Will be called after message handlers have executed. Will be called
+      /// even in case an error has occurred.
       /// </summary>
-      private readonly IModuleManager _moduleManager;
+      void OnFinished();
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="ActionExecutionJob"/> class.
+      /// Will be called in case one of the message handlers throws an exception.
+      /// If an error occurrs this method will be called before <see cref="OnFinished"/>.
       /// </summary>
-      public ActionExecutionJob(Action action, IModuleManager moduleManager)
-      {
-         _action = action;
-         _moduleManager = moduleManager;
-      }
-
-      /// <summary>
-      /// Execute the job.
-      /// </summary>
-      public void Execute()
-      {
-         _moduleManager.OnStart();
-
-         try
-         {
-            _action.Invoke();
-         }
-         catch (Exception ex)
-         {
-            _moduleManager.OnError(ex);
-         }
-         finally
-         {
-            _moduleManager.OnFinished();
-         }
-      }
+      /// <param name="ex">The exception thrown.</param>
+      void OnError(Exception ex);
    }
 }

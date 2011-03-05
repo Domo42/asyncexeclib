@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\IInstanceConfig.cs" />
     <Compile Include="Configuration\InstanceConfig.cs" />
     <Compile Include="Configuration\ModuleConfig.cs" />
     <Compile Include="Execution\ActionExecutionJob.cs" />
@@ -54,15 +55,18 @@
     <Compile Include="Execution\IExecutionPipe.cs" />
     <Compile Include="Execution\IJob.cs" />
     <Compile Include="Execution\IMessageHandlerCreator.cs" />
+    <Compile Include="Execution\IModuleManager.cs" />
     <Compile Include="Execution\MessageHandlerCreator.cs" />
     <Compile Include="Execution\MessageHandlerExecutionJob.cs" />
+    <Compile Include="Execution\ModuleManager.cs" />
     <Compile Include="Execution\SingleThreadPipe.cs" />
     <Compile Include="Execution\WorkingDirectoryScanner.cs" />
     <Compile Include="IBuilder.cs" />
     <Compile Include="IExecutionModule.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageHandler.cs" />
-    <Compile Include="Execution\IMessageHandlerScanner.cs" />
+    <Compile Include="Execution\IAssemblyScanner.cs" />
+    <Compile Include="IMessageModule.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

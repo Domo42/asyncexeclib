@@ -22,14 +22,27 @@ namespace Domo.AsyncExecutionLib.Execution
    using System.Collections.Generic;
 
    /// <summary>
-   /// Scans for available message handler.
+   /// Creates instances of modules, and calls the message modules
+   /// callback methods.
    /// </summary>
-   public interface IMessageHandlerScanner
+   public interface IModuleManager
    {
       /// <summary>
-      /// Scan for message handlers.
+      /// Will be called before any message handlers are executed.
       /// </summary>
-      /// <returns>List of available handlers.</returns>
-      IEnumerable<Type> Scan();
+      void OnStart();
+
+      /// <summary>
+      /// Will be called after message handlers have executed. Will be called
+      /// even in case an error has occurred.
+      /// </summary>
+      void OnFinished();
+
+      /// <summary>
+      /// Will be called in case one of the message handlers throws an exception.
+      /// If an error occurrs this method will be called before <see cref="OnFinished"/>.
+      /// </summary>
+      /// <param name="ex">The exception thrown.</param>
+      void OnError(Exception ex);
    }
 }
