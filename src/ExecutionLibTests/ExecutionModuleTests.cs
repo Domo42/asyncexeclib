@@ -33,9 +33,9 @@ namespace ExecutionLibTests
       private IExecutionModule _sut;
 
       /// <summary>
-      /// Mocked execution queue.
+      /// Mocked execution pipe.
       /// </summary>
-      private IExecutionQueue _execQueue;
+      private IExecutionPipe _execPipe;
 
       /// <summary>
       /// Mocked handler creator.
@@ -59,22 +59,22 @@ namespace ExecutionLibTests
       public void Init()
       {
          _handler = new ExtractHandledMessageHandler(m => _message = m);
-         _execQueue = MockRepository.GenerateMock<IExecutionQueue>();
+         _execPipe = MockRepository.GenerateMock<IExecutionPipe>();
 
          _handlerCreator = MockRepository.GenerateMock<IMessageHandlerCreator>();
          _handlerCreator.Stub(x => x.Create<SeparateMessage>(null))
             .IgnoreArguments().Return(new [] { _handler });
 
-         _sut = new ExecutionModule(_execQueue, _handlerCreator);
+         _sut = new ExecutionModule(_execPipe, _handlerCreator);
       }
 
       /// <summary>
       /// given => An imessage instance.
       /// when  => Add method called.
-      /// then  => Message handler job added to queue.
+      /// then  => Message handler job added to pip.
       /// </summary>
       [Test]
-      public void Add_Message_AddMessageHandlerJobToQueue()
+      public void Add_Message_AddMessageHandlerJobToPipe()
       {
          // given
          var msg = new SeparateMessage();
@@ -84,7 +84,7 @@ namespace ExecutionLibTests
 
          // then
          var constraint = new ParamConstraint<MessageHandlerExecutionJob<SeparateMessage>>();
-         _execQueue.AssertWasCalled(x => x.Add(Arg<IJob>.Matches(constraint)));
+         _execPipe.AssertWasCalled(x => x.Add(Arg<IJob>.Matches(constraint)));
       }
 
       /// <summary>
@@ -99,8 +99,8 @@ namespace ExecutionLibTests
          // given
          var msg = new SeparateMessage();
          IJob job = null;
-         Action<IJob> queueAddAction = x => job = x;
-         _execQueue.Stub(x => x.Add(null)).IgnoreArguments().Do(queueAddAction);
+         Action<IJob> pipeAddAction = x => job = x;
+         _execPipe.Stub(x => x.Add(null)).IgnoreArguments().Do(pipeAddAction);
          
          // when
          _sut.Add(msg);
@@ -113,10 +113,10 @@ namespace ExecutionLibTests
       /// <summary>
       /// given => An action delegate.
       /// when  => Add method called.
-      /// then  => ActionExecution job is added to execution queue.
+      /// then  => ActionExecution job is added to execution pipe.
       /// </summary>
       [Test]
-      public void Add_Action_AddActionExecutionJobToQueue()
+      public void Add_Action_AddActionExecutionJobToPipe()
       {
          // given
          Action action = null;
@@ -126,7 +126,7 @@ namespace ExecutionLibTests
 
          // then
          var constraint = new ParamConstraint<ActionExecutionJob>();
-         _execQueue.AssertWasCalled(x => x.Add(Arg<IJob>.Matches(constraint)));
+         _execPipe.AssertWasCalled(x => x.Add(Arg<IJob>.Matches(constraint)));
       }
 
       /// <summary>
@@ -142,15 +142,15 @@ namespace ExecutionLibTests
          bool hasExecuted = false;
          Action action = () => hasExecuted = true;
          IJob job = null;
-         Action<IJob> queueAddAction = x => job = x;
-         _execQueue.Stub(x => x.Add(null)).IgnoreArguments().Do(queueAddAction);
+         Action<IJob> pipeAddAction = x => job = x;
+         _execPipe.Stub(x => x.Add(null)).IgnoreArguments().Do(pipeAddAction);
 
          // when
          _sut.Add(action);
          job.Execute();
 
          // then
-         Assert.That(hasExecuted, Is.True, "Job added to execution queue has not executed the correct action.");
+         Assert.That(hasExecuted, Is.True, "Job added to execution pipe has not executed the correct action.");
       }
 
       #region [ Support ]

@@ -22,14 +22,14 @@ namespace Domo.AsyncExecutionLib.Execution
    using System.Collections.Concurrent;
 
    /// <summary>
-   /// Relays incoming message to the execution queue.
+   /// Relays incoming message to the execution pipe.
    /// </summary>
    public class ExecutionModule : IExecutionModule
    {
       /// <summary>
       /// Executes jobs on a separate thread.
       /// </summary>
-      private readonly IExecutionQueue _execQueue;
+      private readonly IExecutionPipe _execPipe;
 
       /// <summary>
       /// Creates message handlers based on message type.
@@ -44,9 +44,9 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <summary>
       /// Initializes a new instance of the <see cref="ExecutionModule"/> class.
       /// </summary>
-      public ExecutionModule(IExecutionQueue execQueue, IMessageHandlerCreator handlerCreator)
+      public ExecutionModule(IExecutionPipe execPipe, IMessageHandlerCreator handlerCreator)
       {
-         _execQueue = execQueue;
+         _execPipe = execPipe;
          _handlerCreator = handlerCreator;
       }
 
@@ -60,7 +60,7 @@ namespace Domo.AsyncExecutionLib.Execution
          Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));
 
          IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator);
-         _execQueue.Add(job);
+         _execPipe.Add(job);
       }
 
       /// <summary>
@@ -69,7 +69,7 @@ namespace Domo.AsyncExecutionLib.Execution
       /// <param name="action">The action delegate to execute.</param>
       public void Add(Action action)
       {
-         _execQueue.Add(new ActionExecutionJob(action));
+         _execPipe.Add(new ActionExecutionJob(action));
       }
    }
 }

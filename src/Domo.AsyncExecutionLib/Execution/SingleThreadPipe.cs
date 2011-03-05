@@ -24,9 +24,9 @@ namespace Domo.AsyncExecutionLib.Execution
    using log4net;
 
    /// <summary>
-   /// Executes messages handlers on a single worker thread.
+   /// Executes incoming jobs on a single worker thread.
    /// </summary>
-   public class SingleThreadQueue : IExecutionQueue
+   public class SingleThreadPipe : IExecutionPipe
    {
       /// <summary>
       /// Used for logging.
@@ -44,9 +44,9 @@ namespace Domo.AsyncExecutionLib.Execution
       private bool _isDisposed;
 
       /// <summary>
-      /// Creates a new instance of the <see cref="SingleThreadQueue"/> class.
+      /// Creates a new instance of the <see cref="SingleThreadPipe"/> class.
       /// </summary>
-      public SingleThreadQueue()
+      public SingleThreadPipe()
       {
          var execThread = new Thread(ExecutionThread);
          execThread.IsBackground = true;
@@ -54,9 +54,9 @@ namespace Domo.AsyncExecutionLib.Execution
       }
 
       /// <summary>
-      /// Adds a message into the queue to be handled.
+      /// Adds a message into the pipe to be handled.
       /// </summary>
-      /// <param name="job">Input message.</param>
+      /// <param name="job">Input job.</param>
       public void Add(IJob job)
       {
          _jobs.Add(job);
@@ -72,7 +72,7 @@ namespace Domo.AsyncExecutionLib.Execution
       }
 
       /// <summary>
-      /// Thread delegate executing the message handlers.
+      /// Thread delegate executing the jobs.
       /// </summary>
       private void ExecutionThread()
       {
