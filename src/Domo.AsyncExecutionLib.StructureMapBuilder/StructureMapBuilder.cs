@@ -57,12 +57,42 @@ namespace Domo.AsyncExecutionLib
       }
 
       /// <summary>
+      /// Return instance of requested type.
+      /// </summary>
+      /// <typeparam name="T">Type of the requested instance.</typeparam>
+      /// <returns>Object instance.</returns>
+      public T GetInstance<T>()
+      {
+         return _container.GetInstance<T>();
+      }
+
+      /// <summary>
       /// Inform builder of a message handler type to build.
       /// </summary>
       /// <param name="msgHandlerType">Target type</param>
-      public void ConfigureMsgHandlerType(Type msgHandlerType)
+      public void RegisterMsgHandlerType(Type msgHandlerType)
       {
          _container.Configure(x => x.For(msgHandlerType).LifecycleIs(InstanceScope.PerRequest).Use(msgHandlerType));
+      }
+
+      /// <summary>
+      /// Registers a type which should be configured as singleton.
+      /// </summary>
+      /// <param name="pluginType">The type for which a singleton instances is to be created.</param>
+      /// <param name="concreteType">The concrete type implementing the instance type.</param>
+      public void RegisterSingleton(Type pluginType, Type concreteType)
+      {
+         _container.Configure(x => x.For(pluginType).Singleton().Use(concreteType));
+      }
+
+      /// <summary>
+      /// Register a type which should be configured to be created on a 'per request' basis.
+      /// </summary>
+      /// <param name="pluginType">The type for which a singleton instances is to be created.</param>
+      /// <param name="concreteType">The concrete type implementing the instance type.</param>
+      public void Register(Type pluginType, Type concreteType)
+      {
+         _container.Configure(x => x.For(pluginType).Use(concreteType));
       }
    }
 }

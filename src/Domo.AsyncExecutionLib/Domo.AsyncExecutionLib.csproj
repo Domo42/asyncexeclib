@@ -12,6 +12,8 @@
     <AssemblyName>Domo.AsyncExecutionLib</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,13 +44,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\InstanceConfig.cs" />
+    <Compile Include="Configuration\ModuleConfig.cs" />
     <Compile Include="Execution\ActionExecutionJob.cs" />
     <Compile Include="Execution\ExecutionModule.cs" />
     <Compile Include="Execution\IExecutionQueue.cs" />
@@ -63,6 +63,7 @@
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="IMessageHandlerScanner.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
