@@ -39,9 +39,9 @@ namespace Domo.AsyncExecutionLib.Configuration
       private readonly InstanceConfig<IMessageHandlerScanner> _scanner = new InstanceConfig<IMessageHandlerScanner>();
 
       /// <summary>
-      /// The execution queue to be used.
+      /// The execution pipe to be used.
       /// </summary>
-      private readonly InstanceConfig<IExecutionQueue> _execQueue = new InstanceConfig<IExecutionQueue>();
+      private readonly InstanceConfig<IExecutionPipe> _execPipe = new InstanceConfig<IExecutionPipe>();
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ModuleConfig"/> class.
@@ -50,7 +50,7 @@ namespace Domo.AsyncExecutionLib.Configuration
       {
          // set module defaults
          _scanner.ConcreteType = typeof(WorkingDirectoryScanner);
-         _execQueue.ConcreteType = typeof(SingleThreadQueue);
+         _execPipe.ConcreteType = typeof(SingleThreadPipe);
       }
 
       /// <summary>
@@ -125,7 +125,7 @@ namespace Domo.AsyncExecutionLib.Configuration
 
          RegisterExecModule(singleton);
          RegisterInstance(singleton, _scanner);
-         RegisterInstance(singleton, _execQueue);
+         RegisterInstance(singleton, _execPipe);
 
          return _builder.GetInstance<IExecutionModule>();
       }

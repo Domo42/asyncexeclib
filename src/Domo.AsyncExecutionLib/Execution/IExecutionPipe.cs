@@ -21,12 +21,12 @@ namespace Domo.AsyncExecutionLib.Execution
    using System;
 
    /// <summary>
-   /// Adds jobs to be executed.
+   /// Executions jobs that have been added.
    /// </summary>
-   public interface IExecutionQueue : IDisposable
+   public interface IExecutionPipe : IDisposable
    {
       /// <summary>
-      /// Adds a job into the queue to be executed.
+      /// Adds a job into the pipe to be executed.
       /// </summary>
       /// <param name="job">Job to exeucte.</param>
       void Add(IJob job);
