@@ -62,7 +62,7 @@
     <Compile Include="IExecutionModule.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageHandler.cs" />
-    <Compile Include="IMessageHandlerScanner.cs" />
+    <Compile Include="Execution\IMessageHandlerScanner.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -44,6 +44,11 @@ namespace Domo.AsyncExecutionLib.Configuration
       private readonly InstanceConfig<IExecutionPipe> _execPipe = new InstanceConfig<IExecutionPipe>();
 
       /// <summary>
+      /// The creator provided actual handler instances.
+      /// </summary>
+      private readonly InstanceConfig<IMessageHandlerCreator> _handlerCreator = new InstanceConfig<IMessageHandlerCreator>();
+
+      /// <summary>
       /// Initializes a new instance of the <see cref="ModuleConfig"/> class.
       /// </summary>
       public ModuleConfig()
@@ -51,6 +56,7 @@ namespace Domo.AsyncExecutionLib.Configuration
          // set module defaults
          _scanner.ConcreteType = typeof(WorkingDirectoryScanner);
          _execPipe.ConcreteType = typeof(SingleThreadPipe);
+         _handlerCreator.ConcreteType = typeof(MessageHandlerCreator);
       }
 
       /// <summary>
@@ -72,7 +78,7 @@ namespace Domo.AsyncExecutionLib.Configuration
       /// <returns>Module configuration instance.</returns>
       public ModuleConfig UseScanner<TScanner>() where TScanner : IMessageHandlerScanner
       {
-         UseScanner<TScanner>(true);
+         _scanner.ConcreteType = typeof(TScanner);
          return this;
       }
 
@@ -91,13 +97,28 @@ namespace Domo.AsyncExecutionLib.Configuration
       }
 
       /// <summary>
-      /// Configured the module to scan all assemblies in the current working directory
-      /// for message handlers.
+      /// Configures the module to use a specific execution pipe type. If this call
+      /// is ommited the <see cref="SingleThreadPipe"/> is used.
       /// </summary>
-      /// <returns>Module configuration instance.</returns>
-      public ModuleConfig UseCurrentWorkingDirectoryScanner()
+      /// <typeparam name="TPipe">Type of the execution pipe.</typeparam>
+      /// <returns></returns>
+      public ModuleConfig UseExecutionPipe<TPipe>() where TPipe : IExecutionPipe
       {
-         _scanner.ConcreteType = typeof(WorkingDirectoryScanner);
+         _execPipe.ConcreteType = typeof(TPipe);
+         return this;
+      }
+
+      /// <summary>
+      /// Configures the module to use a specific execution pipe type. If this call
+      /// is ommited the <see cref="SingleThreadPipe"/> is used.
+      /// </summary>
+      /// <typeparam name="TPipe">Type of the execution pipe.</typeparam>
+      /// <param name="singleton">Indicates whether the pipe should be created as singleton.</param>
+      /// <returns></returns>
+      public ModuleConfig UseExecutionPipe<TPipe>(bool singleton) where TPipe : IExecutionPipe
+      {
+         _execPipe.ConcreteType = typeof(TPipe);
+         _execPipe.IsSingleton = singleton;
          return this;
       }
 
@@ -123,9 +144,12 @@ namespace Domo.AsyncExecutionLib.Configuration
             throw new InvalidOperationException(@"No builder has been configured. Call one of the 'UseBuilder' methods before creating the execution module.");
          }
 
+         _builder.RegisterInstance(_builder);
+
          RegisterExecModule(singleton);
          RegisterInstance(singleton, _scanner);
          RegisterInstance(singleton, _execPipe);
+         RegisterInstance(singleton, _handlerCreator);
 
          return _builder.GetInstance<IExecutionModule>();
       }
