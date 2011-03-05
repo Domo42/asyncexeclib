@@ -19,7 +19,6 @@
 namespace Domo.AsyncExecutionLib.Execution
 {
    using System;
-   using System.Collections;
    using System.Collections.Concurrent;
    using System.Collections.Generic;
    using System.Linq;
@@ -118,7 +117,7 @@ namespace Domo.AsyncExecutionLib.Execution
 
          foreach (Type handlerType in handlerTypes)
          {
-            _builder.ConfigureMsgHandlerType(handlerType);
+            _builder.RegisterMsgHandlerType(handlerType);
          }
 
          return handlerTypes;
