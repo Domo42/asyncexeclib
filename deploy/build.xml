@@ -1,0 +1,74 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         DefaultTargets="Deployment">
+
+   <Import Project="$(MSBuildProjectDirectory)\bin\MSBuild.Community.Tasks.Targets"/>
+   
+   <UsingTask TaskName="UpdateAssemblyVersion" AssemblyFile="$(MSBuildProjectDirectory)\bin\Domo.BuildTasks.dll" />
+
+   <PropertyGroup>
+      <Configuration>Release</Configuration>
+      <DeploymentDir>$(MSBuildProjectDirectory)\out</DeploymentDir>
+      <ExecLibOutDir>..\src\Domo.AsyncExecutionLib\bin\$(Configuration)</ExecLibOutDir>
+      <SmBuilderOutDir>..\src\Domo.AsyncExecutionLib.StructureMapBuilder\bin\$(Configuration)</SmBuilderOutDir>
+   </PropertyGroup>
+
+   <!-- ====== Define the target assembly version number ===== -->
+   <PropertyGroup>
+      <MajorVersion>0</MajorVersion>
+      <MinorVersion>7</MinorVersion>
+      <BuildVersion>0</BuildVersion>
+      <VersionNumber>$(MajorVersion).$(MinorVersion).$(BuildVersion).0</VersionNumber>
+   </PropertyGroup>
+
+   <ItemGroup>
+      <AsyncLibraryFiles Include="$(ExecLibOutDir)\Domo.AsyncExecutionLib.dll" />
+      <AsyncLibraryFiles Include="$(ExecLibOutDir)\Domo.AsyncExecutionLib.xml" />
+      <AsyncLibraryFiles Include="$(ExecLibOutDir)\log4net.dll" />
+      <AsyncLibraryFiles Include="$(ExecLibOutDir)\log4net.xml" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\Domo.AsyncExecutionLib.StructureMapBuilder.dll" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\Domo.AsyncExecutionLib.StructureMapBuilder.xml" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\StructureMap.dll" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\StructureMap.xml" />
+      <AsyncLibraryFiles Include="..\LICENSE.txt" />
+      <AsyncLibraryFiles Include="disclaimer.txt" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <AssemblyInfoFiles Include="$(MSBuildProjectDirectory)\..\src\Domo.AsyncExecutionLib\Properties\AssemblyInfo.cs" />
+      <AssemblyInfoFiles Include="$(MSBuildProjectDirectory)\..\src\Domo.AsyncExecutionLib.StructureMapBuilder\Properties\AssemblyInfo.cs" />
+   </ItemGroup>
+   
+
+   <!-- Create directory to put files for deplyoment  -->
+   <Target Name="MakeOutputDir">
+      
+      <!-- Delete old directory -->
+      <RemoveDir Directories="$(DeploymentDir)" />
+
+      <!-- Create a new one -->
+      <MakeDir Directories="$(DeploymentDir)" />
+         
+   </Target>
+   
+   <!-- Compile the solution -->
+   <Target Name="Build" DependsOnTargets="MakeOutputDir">
+      
+      <UpdateAssemblyVersion VersionNumber="$(VersionNumber)"
+                             BaseDirectory="$(MSBuildProjectDirectory)\..\"
+                             IgnoreDirectory="\.hg"/>
+      
+      <MSBuild Projects="..\ExecLib.sln" Properties="Configuration=$(Configuration)" />
+   </Target>
+
+   <!-- Copy and zip files to output directory -->
+   <Target Name="Deployment" DependsOnTargets="Build">
+
+      <Zip Files="@(AsyncLibraryFiles)"
+           ZipFileName="$(DeploymentDir)\AsyncExecLib_V$(MajorVersion)_$(MinorVersion)_$(BuildVersion).zip"
+           Flatten="true" />
+
+      <Message Text="Created new zip file located in $(DeploymentDir)" />
+      
+   </Target>
+   
+</Project>
