@@ -19,6 +19,7 @@
          // create a module instance with default settings.
          var execModule = Module.Configure()
                            .UseStructureMap()
+                           .FirstExecute<LogMessageHandler>()
                            .Build();
 
          // create a new message to be handled.
@@ -47,6 +48,9 @@
       public string Text { get; set; }
    }
 
+   /// <summary>
+   /// Message handler of the concrete message.
+   /// </summary>
    public class MyMessageHandler : IMessageHandler<MyMessage>
    {
       /// <summary>
@@ -55,9 +59,19 @@
       /// <param name="message">The message.</param>
       public void Handle(MyMessage message)
       {
+         Console.WriteLine("MyMessageHandler : Custom message has been handled. Text = {0}", message.Text ?? "<null>");
+      }
+   }
+
+   /// <summary>
+   /// Message handler machting any base IMessage.
+   /// </summary>
+   public class LogMessageHandler : IMessageHandler<IMessage>
+   {
+      public void Handle(IMessage message)
+      {
          Console.WriteLine();
-         Console.WriteLine("***");
-         Console.WriteLine("* Custom message has been handled. Text = {0}", message.Text ?? "<null>");
+         Console.WriteLine("LogMessageHandler: Message of type '{0}' received.", message.GetType().Name);
       }
    }
 

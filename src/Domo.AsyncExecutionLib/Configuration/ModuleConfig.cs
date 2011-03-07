@@ -40,6 +40,11 @@ namespace Domo.AsyncExecutionLib.Configuration
       private readonly Dictionary<Type, IInstanceConfig> _instanceConfigs = new Dictionary<Type, IInstanceConfig>();
 
       /// <summary>
+      /// List of message handler types to be executed before others.
+      /// </summary>
+      private readonly List<Type> _handlerExecutionOrdering = new List<Type>();
+
+      /// <summary>
       /// Initializes a new instance of the <see cref="ModuleConfig"/> class.
       /// </summary>
       public ModuleConfig()
@@ -51,7 +56,7 @@ namespace Domo.AsyncExecutionLib.Configuration
          var pipe = new InstanceConfig<IExecutionPipe> { ConcreteType = typeof(SingleThreadPipe) };
          _instanceConfigs.Add(pipe.PluginType, pipe);
 
-         var handleCreator = new InstanceConfig<IMessageHandlerCreator> { ConcreteType = typeof(MessageHandlerCreator) };
+         var handleCreator = new InstanceConfig<IMessageHandlerCreator> { ConcreteType = typeof(MessageHandlerCreator), IsSingleton = true };
          _instanceConfigs.Add(handleCreator.PluginType, handleCreator);
 
          var moduleManager = new InstanceConfig<IModuleManager> { ConcreteType = typeof(ModuleManager) };
@@ -100,7 +105,7 @@ namespace Domo.AsyncExecutionLib.Configuration
       /// is ommited the <see cref="SingleThreadPipe"/> is used.
       /// </summary>
       /// <typeparam name="TPipe">Type of the execution pipe.</typeparam>
-      /// <returns></returns>
+      /// <returns>Module configuration instance.</returns>
       public ModuleConfig UseExecutionPipe<TPipe>() where TPipe : IExecutionPipe
       {
          _instanceConfigs[typeof(IExecutionPipe)].ConcreteType = typeof(TPipe);
@@ -113,11 +118,38 @@ namespace Domo.AsyncExecutionLib.Configuration
       /// </summary>
       /// <typeparam name="TPipe">Type of the execution pipe.</typeparam>
       /// <param name="singleton">Indicates whether the pipe should be created as singleton.</param>
-      /// <returns></returns>
+      /// <returns>Module configuration instance.</returns>
       public ModuleConfig UseExecutionPipe<TPipe>(bool singleton) where TPipe : IExecutionPipe
       {
          _instanceConfigs[typeof(IExecutionPipe)].ConcreteType = typeof(TPipe);
          _instanceConfigs[typeof(IExecutionPipe)].IsSingleton = singleton;
+         return this;
+      }
+
+      /// <summary>
+      /// Specifiy a message handler type to be exeucted before the others.
+      /// </summary>
+      /// <typeparam name="TMEssageHandler">Type of the message handler.</typeparam>
+      /// <returns>Handler ordering instruction.</returns>
+      public ModuleConfig FirstExecute<TMEssageHandler>()
+      {
+         _handlerExecutionOrdering.Add(typeof(TMEssageHandler));
+         return this;
+      }
+
+      /// <summary>
+      /// Specifiy a message handler type to be executed before the others. Additional
+      /// handlers can be specified calling by calling Next&lt;T&gt;() on the action
+      /// argument.
+      /// </summary>
+      /// <typeparam name="TMessageHandler">Type of the message handler.</typeparam>
+      /// <param name="additionalOrdering">Configuration action to specify addtional handlers.</param>
+      /// <returns>Module configuration instance.</returns>
+      public ModuleConfig FirstExecute<TMessageHandler>(Action<HandlerOrdering> additionalOrdering)
+      {
+         var nextHandlers = new HandlerOrdering(_handlerExecutionOrdering);
+         additionalOrdering(nextHandlers);
+
          return this;
       }
 
@@ -148,7 +180,18 @@ namespace Domo.AsyncExecutionLib.Configuration
          RegisterExecModule(singleton);
          RegisterDependencies(singleton);
 
+         SetPreferedOrder();
+
          return _builder.GetInstance<IExecutionModule>();
+      }
+
+      /// <summary>
+      /// Sets message handler ordering.
+      /// </summary>
+      private void SetPreferedOrder()
+      {
+         IMessageHandlerCreator handlerCreator = _builder.GetInstance<IMessageHandlerCreator>();
+         handlerCreator.SetPreferredOrder(_handlerExecutionOrdering);
       }
 
       /// <summary>

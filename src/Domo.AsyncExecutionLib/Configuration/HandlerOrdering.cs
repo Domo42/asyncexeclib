@@ -16,28 +16,39 @@
 /****************************************************************************/
 #endregion
 
-namespace Domo.AsyncExecutionLib.Execution
+namespace Domo.AsyncExecutionLib.Configuration
 {
    using System;
    using System.Collections.Generic;
 
    /// <summary>
-   /// Creates message handlers for specific messages.
+   /// Adds message handler types to the prefered order list.
    /// </summary>
-   public interface IMessageHandlerCreator
+   public class HandlerOrdering
    {
       /// <summary>
-      /// Creates a list of handlers associated with the given message.
+      /// Current list of ordered handlers.
       /// </summary>
-      /// <typeparam name="TMessage">Type of the message.</typeparam>
-      /// <param name="message">The message to be handled.</param>
-      /// <returns>A list of message handlers able to handle the given message.</returns>
-      IEnumerable<IMessageHandler<TMessage>> Create<TMessage>(TMessage message) where TMessage : IMessage;
+      private readonly IList<Type> _orderedHandlers;
 
       /// <summary>
-      /// Sets a a prefered execution order for message handler types.
+      /// Initializes a new instance of the <see cref="HandlerOrdering"/> class.
       /// </summary>
-      /// <param name="handlers">List of message handler types in expected order.</param>
-      void SetPreferredOrder(IEnumerable<Type> handlers);
+      /// <param name="orderedHandlers">The ordered handlers.</param>
+      public HandlerOrdering(IList<Type> orderedHandlers)
+      {
+         _orderedHandlers = orderedHandlers;
+      }
+
+      /// <summary>
+      /// Next message handler in execution chain.
+      /// </summary>
+      /// <typeparam name="TMessageHandler">Type of the message handler</typeparam>
+      /// <returns></returns>
+      public HandlerOrdering Then<TMessageHandler>()
+      {
+         _orderedHandlers.Add(typeof(TMessageHandler));
+         return this;
+      }
    }
 }

@@ -106,5 +106,66 @@ namespace ExecutionLibTests
          Assert.That(retVal, Has.Some.InstanceOf<InterfaceMessageHandler>());
          Assert.That(retVal, Has.Some.InstanceOf<MessageBaseHandler>());
       }
+
+      /// <summary>
+      /// given => Specific message handler ordering has been set.
+      /// when  => Create is called.
+      /// then  => Instances returned are in specific order.
+      /// </summary>
+      [Test]
+      public void Create_OrderSet_ExpectedInterfaceHandlerBeforeSpecific()
+      {
+         // given
+         var msg = new SeparateMessage();
+         var expected = new[] { typeof(InterfaceMessageHandler), typeof(SeparateMessgeHandler) };
+         _sut.SetPreferredOrder(expected);
+
+         // when
+         var retVal = _sut.Create(msg).ToArray();
+
+         // then
+         Assert.That(retVal[0], Is.InstanceOf(expected[0]));
+         Assert.That(retVal[1], Is.InstanceOf(expected[1]));
+      }
+
+      /// <summary>
+      /// given => Specific message handler ordering has been set with only single prefered one.
+      /// when  => Create is called.
+      /// then  => Interface handler is in front.
+      /// </summary>
+      [Test]
+      public void Create_OrderSet_ExpectedInterfaceHandlerInFront()
+      {
+         // given
+         var msg = new SeparateMessage();
+         var expected = new[] { typeof(InterfaceMessageHandler) };
+         _sut.SetPreferredOrder(expected);
+
+         // when
+         var retVal = _sut.Create(msg).ToArray();
+
+         // then
+         Assert.That(retVal[0], Is.InstanceOf(expected[0]));
+      }
+
+      /// <summary>
+      /// given => SetPreferrredOrder with null argument. 
+      /// when  => Create is called.
+      /// then  => Return expected handlers in any order.
+      /// </summary>
+      [Test]
+      public void Create_SetOrderNull_ReturnHandlersInAnyOrder()
+      {
+         // given
+         var msg = new SeparateMessage();
+         _sut.SetPreferredOrder(null);
+
+         // when
+         var retVal = _sut.Create(msg).ToArray();
+
+         // then
+         Assert.That(retVal, Has.Some.InstanceOf<InterfaceMessageHandler>());
+         Assert.That(retVal, Has.Some.InstanceOf<SeparateMessgeHandler>());
+      }
    }
 }
