@@ -49,6 +49,11 @@ namespace Domo.AsyncExecutionLib.Execution
       private readonly ConcurrentDictionary<Type, List<Type>> _handlers = new ConcurrentDictionary<Type,List<Type>>();
 
       /// <summary>
+      /// Prefered message handler ordering.
+      /// </summary>
+      private IEnumerable<Type> _preferedOrder = new List<Type>();
+
+      /// <summary>
       /// Initializes a new instance of the <see cref="MessageHandlerCreator"/> class.
       /// </summary>
       public MessageHandlerCreator(IAssemblyScanner scanner, IBuilder builder)
@@ -80,6 +85,22 @@ namespace Domo.AsyncExecutionLib.Execution
          }
 
          return handlerInstances;
+      }
+
+      /// <summary>
+      /// Sets a a prefered execution order for message handler types.
+      /// </summary>
+      /// <param name="handlers">List of message handler types in expected order.</param>
+      public void SetPreferredOrder(IEnumerable<Type> handlers)
+      {
+         if (handlers != null)
+         {
+            _preferedOrder = handlers;
+         }
+         else
+         {
+            _preferedOrder = new List<Type>();
+         }
       }
 
       /// <summary>
@@ -120,7 +141,44 @@ namespace Domo.AsyncExecutionLib.Execution
             _builder.RegisterMsgHandlerType(handlerType);
          }
 
-         return handlerTypes;
+         return CreatePreferredExecutionOrder(handlerTypes);
+      }
+
+      /// <summary>
+      /// If set, puts prefered handlers in front.
+      /// </summary>
+      /// <returns>Sorted collection.</returns>
+      private List<Type> CreatePreferredExecutionOrder(List<Type> unsortedHandlers)
+      {
+         List<Type> sorted = new List<Type>();
+
+         // Search for prefered types and put them in front.
+         foreach (Type sortedType in _preferedOrder.Reverse())
+         {
+            foreach (Type unsortedType in unsortedHandlers)
+            {
+               if (sortedType == unsortedType)
+               {
+                  if (!sorted.Contains(unsortedType))
+                  {
+                     // put in front if prefered to be executed before
+                     // unspecified ones.
+                     sorted.Insert(0, unsortedType);
+                  }
+               }
+            }
+         }
+
+         // append all handlers not already in list
+         foreach (Type handler in unsortedHandlers)
+         {
+            if (!sorted.Contains(handler))
+            {
+               sorted.Add(handler);
+            }
+         }
+
+         return sorted;
       }
 
       /// <summary>

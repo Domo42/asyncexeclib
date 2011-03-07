@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\HandlerOrdering.cs" />
     <Compile Include="Configuration\IInstanceConfig.cs" />
     <Compile Include="Configuration\InstanceConfig.cs" />
     <Compile Include="Configuration\ModuleConfig.cs" />
