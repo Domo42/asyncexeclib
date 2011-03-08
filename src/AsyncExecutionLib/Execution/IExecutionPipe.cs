@@ -16,22 +16,19 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib.Execution
 {
-   using OnyxOx.AsyncExecutionLib;
+   using System;
 
    /// <summary>
-   /// Message base class.
+   /// Executions jobs that have been added.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   public interface IExecutionPipe : IDisposable
    {
-   }
-
-   public class MessageSuperClass : MessageBase
-   {
-   }
-
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Adds a job into the pipe to be executed.
+      /// </summary>
+      /// <param name="job">Job to exeucte.</param>
+      void Add(IJob job);
    }
 }

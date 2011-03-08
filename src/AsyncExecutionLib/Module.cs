@@ -16,22 +16,34 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib
 {
-   using OnyxOx.AsyncExecutionLib;
+   using Configuration;
+   using Execution;
 
    /// <summary>
-   /// Message base class.
+   /// Used to configure and start the execution module.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   public static class Module
    {
-   }
+      /// <summary>
+      /// Start execution module configuration.
+      /// </summary>
+      /// <returns>Configuration settings.</returns>
+      public static ModuleConfig Configure()
+      {
+         return new ModuleConfig();
+      }
 
-   public class MessageSuperClass : MessageBase
-   {
-   }
-
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Configured the module to scan all assemblies in the current working directory
+      /// for message handlers.
+      /// </summary>
+      /// <returns>Module configuration instance.</returns>
+      public static ModuleConfig UseCurrentWorkingDirectoryScanner(this ModuleConfig config)
+      {
+         config.UseScanner<WorkingDirectoryScanner>();
+         return config;
+      }
    }
 }

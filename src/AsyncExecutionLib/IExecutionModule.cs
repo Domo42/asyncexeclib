@@ -16,22 +16,25 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib
 {
-   using OnyxOx.AsyncExecutionLib;
+   using System;
 
    /// <summary>
-   /// Message base class.
+   /// Executes messages handler of added messages.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   public interface IExecutionModule
    {
-   }
+      /// <summary>
+      /// Add a message to be handled.
+      /// </summary>
+      /// <param name="message">The message</param>
+      void Add(IMessage message);
 
-   public class MessageSuperClass : MessageBase
-   {
-   }
-
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Action to be executed.
+      /// </summary>
+      /// <param name="action">The action delegate to execute.</param>
+      void Add(Action action);
    }
 }

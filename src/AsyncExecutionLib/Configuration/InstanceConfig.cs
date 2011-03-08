@@ -16,22 +16,32 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib.Configuration
 {
-   using OnyxOx.AsyncExecutionLib;
+   using System;
 
    /// <summary>
-   /// Message base class.
+   /// Holds the configuration for a single instance to be created.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   internal class InstanceConfig<TPluginType> : IInstanceConfig
    {
-   }
+      /// <summary>
+      /// Gets the type to be created.
+      /// </summary>
+      public Type PluginType
+      {
+         get { return typeof(TPluginType); }
+      }
 
-   public class MessageSuperClass : MessageBase
-   {
-   }
+      /// <summary>
+      /// Gets or sets the concrety type of the instance to be created.
+      /// </summary>
+      public Type ConcreteType { get; set; }
 
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Gets or sets a value indicating whether the instance should be created
+      /// as a singleton.
+      /// </summary>
+      public bool? IsSingleton { get; set; }
    }
 }

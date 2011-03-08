@@ -1,7 +1,7 @@
 ﻿namespace SampleClient
 {
    using System;
-   using Domo.AsyncExecutionLib;
+   using OnyxOx.AsyncExecutionLib;
 
    /// <summary>
    /// Main program entry class.

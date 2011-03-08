@@ -22,8 +22,8 @@ namespace ExecutionLibTests
    using System.Collections.Generic;
    using System.IO;
    using System.Linq;
-   using Domo.AsyncExecutionLib;
-   using Domo.AsyncExecutionLib.Execution;
+   using OnyxOx.AsyncExecutionLib;
+   using OnyxOx.AsyncExecutionLib.Execution;
    using NUnit.Framework;
 
    [TestFixture]

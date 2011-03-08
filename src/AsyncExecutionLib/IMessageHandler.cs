@@ -16,22 +16,18 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib
 {
-   using OnyxOx.AsyncExecutionLib;
-
    /// <summary>
-   /// Message base class.
+   /// Handles custom messages.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   /// <typeparam name="TMessage">Type of message to handle.</typeparam>
+   public interface IMessageHandler<in TMessage> where TMessage : IMessage
    {
-   }
-
-   public class MessageSuperClass : MessageBase
-   {
-   }
-
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Handles the message.
+      /// </summary>
+      /// <param name="message">The message to handle.</param>
+      void Handle(TMessage message);
    }
 }
