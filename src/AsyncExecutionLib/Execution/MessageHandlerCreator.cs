@@ -188,23 +188,35 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private void GroupHandlersByHandledTypes()
       {
          IEnumerable<Type> messageHandlerTypes = _scanner.ScanForMessageHandlers();
-         foreach (Type msgHandler in messageHandlerTypes)
+         if (messageHandlerTypes != null)
          {
-            var handlerInterfaceTypes = msgHandler.GetInterfaces().Where(IsMessageHandlerInterface);
-            foreach (Type handlerInterface in handlerInterfaceTypes)
+            foreach (Type msgHandler in messageHandlerTypes)
             {
-               Type handledMsgType = handlerInterface.GetGenericArguments().First();
-
-               List<Type> handlerTypes;
-               if (!_scannedHandlers.TryGetValue(handledMsgType, out handlerTypes))
+               var handlerInterfaceTypes = msgHandler.GetInterfaces().Where(IsMessageHandlerInterface);
+               foreach (Type handlerInterface in handlerInterfaceTypes)
                {
-                  handlerTypes = new List<Type>();
-                  _scannedHandlers.Add(handledMsgType, handlerTypes);
-               }
+                  Type handledMsgType = handlerInterface.GetGenericArguments().First();
 
-               handlerTypes.Add(msgHandler);
+                  AddToScannedHandlers(handledMsgType, msgHandler);
+               }
             }
          }
+      }
+
+      /// <summary>
+      /// Adds to handlers execution dictionary. Creates new entry if entry
+      /// for message type does not yet exists.
+      /// </summary>
+      private void AddToScannedHandlers(Type handledMsgType, Type msgHandler)
+      {
+         List<Type> handlerTypes;
+         if (!_scannedHandlers.TryGetValue(handledMsgType, out handlerTypes))
+         {
+            handlerTypes = new List<Type>();
+            _scannedHandlers.Add(handledMsgType, handlerTypes);
+         }
+
+         handlerTypes.Add(msgHandler);
       }
 
       /// <summary>

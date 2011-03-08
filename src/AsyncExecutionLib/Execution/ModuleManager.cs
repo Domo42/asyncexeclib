@@ -81,12 +81,16 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       private void CreateModuleInstances(IAssemblyScanner scanner, IBuilder builder)
       {
-         foreach (Type moduleType in scanner.ScanForMessageModules())
+         IEnumerable<Type> moduleTypes = scanner.ScanForMessageModules();
+         if (moduleTypes != null)
          {
-            builder.Register(moduleType, moduleType);
+            foreach (Type moduleType in moduleTypes)
+            {
+               builder.Register(moduleType, moduleType);
 
-            IMessageModule module = (IMessageModule)builder.GetInstance(moduleType);
-            _modules.Add(module);
+               IMessageModule module = (IMessageModule) builder.GetInstance(moduleType);
+               _modules.Add(module);
+            }
          }
       }
    }

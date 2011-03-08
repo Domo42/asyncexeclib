@@ -167,5 +167,24 @@ namespace ExecutionLibTests
          Assert.That(retVal, Has.Some.InstanceOf<InterfaceMessageHandler>());
          Assert.That(retVal, Has.Some.InstanceOf<SeparateMessgeHandler>());
       }
+
+      /// <summary>
+      /// given => Handler scanner returns null.
+      /// when  => Object is constructed.
+      /// then  => Do not throw.
+      /// </summary>
+      [Test]
+      public void Ctor_ScannerReturnsNull_DoNotThrow()
+      {
+         // given
+         var scanner = MockRepository.GenerateStub<IAssemblyScanner>();
+         scanner.Stub(x => x.ScanForMessageHandlers()).Return(null);
+
+         // when
+         TestDelegate ctorAction = () => new MessageHandlerCreator(scanner, _builder);
+
+         // then
+         Assert.DoesNotThrow(ctorAction);
+      }
    }
 }

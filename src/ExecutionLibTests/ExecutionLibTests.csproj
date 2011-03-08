@@ -52,6 +52,7 @@
     <Compile Include="Definitions\ParamConstraint.cs" />
     <Compile Include="ExecutionModuleTests.cs" />
     <Compile Include="MessageHandlerCreatorTests.cs" />
+    <Compile Include="ModuleManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkingDirectoryScannerTests.cs" />
   </ItemGroup>
