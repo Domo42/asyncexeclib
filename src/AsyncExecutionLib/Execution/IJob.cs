@@ -16,22 +16,17 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib.Execution
 {
-   using OnyxOx.AsyncExecutionLib;
-
    /// <summary>
-   /// Message base class.
+   /// A job to executed in the execution lib. Typical job execute
+   /// a list of message handlers, or action delegate.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   public interface IJob
    {
-   }
-
-   public class MessageSuperClass : MessageBase
-   {
-   }
-
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Execute the job.
+      /// </summary>
+      void Execute();
    }
 }

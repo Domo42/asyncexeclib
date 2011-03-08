@@ -1,7 +1,7 @@
 ﻿namespace ExecutionLibTests
 {
    using System;
-   using Domo.AsyncExecutionLib;
+   using OnyxOx.AsyncExecutionLib;
 
    public class MessageModule : IMessageModule
    {

@@ -16,22 +16,26 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib.Execution
 {
-   using OnyxOx.AsyncExecutionLib;
+   using System;
+   using System.Collections.Generic;
 
    /// <summary>
-   /// Message base class.
+   /// Scans for available message handler.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   public interface IAssemblyScanner
    {
-   }
+      /// <summary>
+      /// Scan for message handlers.
+      /// </summary>
+      /// <returns>List of available handlers.</returns>
+      IEnumerable<Type> ScanForMessageHandlers();
 
-   public class MessageSuperClass : MessageBase
-   {
-   }
-
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Scan for message module types.
+      /// </summary>
+      /// <returns>List of available message modules.</returns>
+      IEnumerable<Type> ScanForMessageModules();
    }
 }

@@ -51,17 +51,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domo.AsyncExecutionLib.StructureMapBuilder\Domo.AsyncExecutionLib.StructureMapBuilder.csproj">
-      <Project>{D636713F-0A84-4A30-92A4-6CA631A8727E}</Project>
-      <Name>Domo.AsyncExecutionLib.StructureMapBuilder</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Domo.AsyncExecutionLib\Domo.AsyncExecutionLib.csproj">
-      <Project>{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}</Project>
-      <Name>Domo.AsyncExecutionLib</Name>
-    </ProjectReference>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <ProjectReference Include="..\AsyncExecutionLib.StructureMapBuilder\OnyxOx.AsyncExecutionLib.StructureMapBuilder.csproj">
+      <Project>{D636713F-0A84-4A30-92A4-6CA631A8727E}</Project>
+      <Name>OnyxOx.AsyncExecutionLib.StructureMapBuilder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AsyncExecutionLib\OnyxOx.AsyncExecutionLib.csproj">
+      <Project>{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}</Project>
+      <Name>OnyxOx.AsyncExecutionLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

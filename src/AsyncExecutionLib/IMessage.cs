@@ -16,22 +16,12 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib
 {
-   using OnyxOx.AsyncExecutionLib;
-
    /// <summary>
-   /// Message base class.
+   /// Marker interface for all messages added into the execution module.
    /// </summary>
-   public abstract class MessageBase : IMessage
-   {
-   }
-
-   public class MessageSuperClass : MessageBase
-   {
-   }
-
-   public class SeparateMessage : IMessage
+   public interface IMessage
    {
    }
 }

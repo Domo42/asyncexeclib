@@ -16,22 +16,32 @@
 /****************************************************************************/
 #endregion
 
-namespace ExecutionLibTests
+namespace OnyxOx.AsyncExecutionLib
 {
-   using OnyxOx.AsyncExecutionLib;
+   using System;
 
    /// <summary>
-   /// Message base class.
+   /// Classes inheriting from this interface will be called before and after the
+   /// message handling chain executes.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   public interface IMessageModule
    {
-   }
+      /// <summary>
+      /// Will be called before any message handlers are executed.
+      /// </summary>
+      void OnStart();
 
-   public class MessageSuperClass : MessageBase
-   {
-   }
+      /// <summary>
+      /// Will be called after message handlers have executed. Will be called
+      /// even in case an error has occurred.
+      /// </summary>
+      void OnFinished();
 
-   public class SeparateMessage : IMessage
-   {
+      /// <summary>
+      /// Will be called in case one of the message handlers throws an exception.
+      /// If an error occurrs this method will be called before <see cref="OnFinished"/>.
+      /// </summary>
+      /// <param name="ex">The exception thrown.</param>
+      void OnError(Exception ex);
    }
 }
