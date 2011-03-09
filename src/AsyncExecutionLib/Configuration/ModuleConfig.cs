@@ -59,13 +59,13 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
          var scanner = new InstanceConfig<IAssemblyScanner> { ConcreteType = typeof(WorkingDirectoryScanner), IsSingleton = true };
          _instanceConfigs.Add(scanner.PluginType, scanner);
 
-         var pipe = new InstanceConfig<IExecutionPipe> { ConcreteType = typeof(SingleThreadPipe) };
+         var pipe = new InstanceConfig<IExecutionPipe> { ConcreteType = typeof(SingleThreadPipe), IsSingleton = true };
          _instanceConfigs.Add(pipe.PluginType, pipe);
 
          var handleCreator = new InstanceConfig<IMessageHandlerCreator> { ConcreteType = typeof(MessageHandlerCreator), IsSingleton = true };
          _instanceConfigs.Add(handleCreator.PluginType, handleCreator);
 
-         var moduleManager = new InstanceConfig<IModuleManager> { ConcreteType = typeof(ModuleManager) };
+         var moduleManager = new InstanceConfig<IModuleManager> { ConcreteType = typeof(ModuleManager), IsSingleton = true };
          _instanceConfigs.Add(moduleManager.PluginType, moduleManager);
       }
 
@@ -89,20 +89,7 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       public ModuleConfig UseScanner<TScanner>() where TScanner : IAssemblyScanner
       {
          _instanceConfigs[typeof(IAssemblyScanner)].ConcreteType = typeof(TScanner);
-         return this;
-      }
-
-      /// <summary>
-      /// Custom message scanner to use. If ommited all assemblies in the current working directory
-      /// are scanned for message handlers.
-      /// </summary>
-      /// <typeparam name="TScanner">Concrete message handler scanner type.</typeparam>
-      /// <param name="singleton">Indicates whether to register the scanner as a singleton.</param>
-      /// <returns>Module configuration instance.</returns>
-      public ModuleConfig UseScanner<TScanner>(bool singleton) where TScanner : IAssemblyScanner
-      {
-         _instanceConfigs[typeof(IAssemblyScanner)].ConcreteType = typeof(TScanner);
-         _instanceConfigs[typeof(IAssemblyScanner)].IsSingleton = singleton;
+         _instanceConfigs[typeof(IAssemblyScanner)].IsSingleton = true;
          return this;
       }
 
@@ -114,7 +101,7 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       /// <returns>Module configuration instance.</returns>
       public ModuleConfig ScanSpecificAssemblies(Action<AssemblySelector> assemblySelector)
       {
-         UseScanner<SelectedAssemblyScanner>(true);
+         UseScanner<SelectedAssemblyScanner>();
          assemblySelector(new AssemblySelector(_assembliesToScan));
 
          return this;
@@ -129,20 +116,7 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       public ModuleConfig UseExecutionPipe<TPipe>() where TPipe : IExecutionPipe
       {
          _instanceConfigs[typeof(IExecutionPipe)].ConcreteType = typeof(TPipe);
-         return this;
-      }
-
-      /// <summary>
-      /// Configures the module to use a specific execution pipe type. If this call
-      /// is ommited the <see cref="SingleThreadPipe"/> is used.
-      /// </summary>
-      /// <typeparam name="TPipe">Type of the execution pipe.</typeparam>
-      /// <param name="singleton">Indicates whether the pipe should be created as singleton.</param>
-      /// <returns>Module configuration instance.</returns>
-      public ModuleConfig UseExecutionPipe<TPipe>(bool singleton) where TPipe : IExecutionPipe
-      {
-         _instanceConfigs[typeof(IExecutionPipe)].ConcreteType = typeof(TPipe);
-         _instanceConfigs[typeof(IExecutionPipe)].IsSingleton = singleton;
+         _instanceConfigs[typeof(IExecutionPipe)].IsSingleton = true;
          return this;
       }
 
@@ -179,18 +153,8 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       /// Builds a new singleton execution module instance.
       /// </summary>
       /// <returns>The execution module</returns>
+      [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UseBuilder", Justification = "Refering to method name.")]
       public IExecutionModule Build()
-      {
-         return Build(true);
-      }
-
-      /// <summary>
-      /// Builds a new execution module instance.
-      /// </summary>
-      /// <param name="singleton">Indicates whether the execution module should be created as singleton.</param>
-      /// <returns>The execution module</returns>
-      [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "UseBuilder")]
-      public IExecutionModule Build(bool singleton)
       {
          if (_builder == null)
          {
@@ -199,8 +163,8 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
 
          _builder.RegisterInstance(_builder);
 
-         RegisterExecModule(singleton);
-         RegisterDependencies(singleton);
+         RegisterExecModule(true);
+         RegisterDependencies(true);
 
          SetAssembliesToScan();
          SetPreferedOrder();
