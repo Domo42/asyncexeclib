@@ -147,6 +147,8 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       /// <returns>Module configuration instance.</returns>
       public ModuleConfig FirstExecute<TMessageHandler>(Action<HandlerOrdering> additionalOrdering)
       {
+         _handlerExecutionOrdering.Add(typeof(TMessageHandler));
+
          var nextHandlers = new HandlerOrdering(_handlerExecutionOrdering);
          additionalOrdering(nextHandlers);
 
