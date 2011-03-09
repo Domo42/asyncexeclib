@@ -29,7 +29,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    /// Scans all assemblies of the current working directory for
    /// Message handlers.
    /// </summary>
-   public class WorkingDirectoryScanner : IAssemblyScanner
+   public class WorkingDirectoryScanner : AssemblyScanner, IAssemblyScanner
    {
       /// <summary>
       /// Scan for message handlers.
@@ -89,46 +89,6 @@ namespace OnyxOx.AsyncExecutionLib.Execution
          }
 
          return handlers ?? new Type[0];
-      }
-
-      /// <summary>
-      /// Scans an assembly for message handler implementations.
-      /// </summary>
-      private IEnumerable<Type> ScanAssembly(Assembly assembly, Predicate<Type> targetType)
-      {
-         List<Type> handlerTypes = new List<Type>();
-
-         foreach (Type t in assembly.GetTypes())
-         {
-            if (!t.IsAbstract)
-            {
-               Type[] interfaces = t.GetInterfaces();
-               if (interfaces.Any(i => targetType(i)))
-               {
-                  handlerTypes.Add(t);
-               }
-            }
-         }
-
-         return handlerTypes;
-      }
-
-      /// <summary>
-      /// Returns true if interface is of type IMessageModule.
-      /// </summary>
-      /// <returns>True if </returns>
-      private bool IsMessageModuleInterface(Type interfaceType)
-      {
-         return interfaceType.IsInterface && typeof(IMessageModule).IsAssignableFrom(interfaceType);
-      }
-
-      /// <summary>
-      /// Returns true if type implements at least one message handler.
-      /// </summary>
-      /// <returns>True if implemented.</returns>
-      private bool IsMessageHandlerInterface(Type interfaceType)
-      {
-         return interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IMessageHandler<>);
       }
    }
 }

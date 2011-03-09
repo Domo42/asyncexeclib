@@ -54,6 +54,7 @@
     <Compile Include="MessageHandlerCreatorTests.cs" />
     <Compile Include="ModuleManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectedAssemblyScannerTests.cs" />
     <Compile Include="WorkingDirectoryScannerTests.cs" />
   </ItemGroup>
   <ItemGroup>
