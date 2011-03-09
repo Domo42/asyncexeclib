@@ -47,11 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AssemblySelector.cs" />
     <Compile Include="Configuration\HandlerOrdering.cs" />
     <Compile Include="Configuration\IInstanceConfig.cs" />
     <Compile Include="Configuration\InstanceConfig.cs" />
     <Compile Include="Configuration\ModuleConfig.cs" />
     <Compile Include="Execution\ActionExecutionJob.cs" />
+    <Compile Include="Execution\AssemblyScanner.cs" />
+    <Compile Include="Execution\SelectedAssemblyScanner.cs" />
     <Compile Include="Execution\ExecutionModule.cs" />
     <Compile Include="Execution\IExecutionPipe.cs" />
     <Compile Include="Execution\IJob.cs" />

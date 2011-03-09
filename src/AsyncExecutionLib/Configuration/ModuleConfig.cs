@@ -21,6 +21,7 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
    using System;
    using System.Collections.Generic;
    using System.Diagnostics.CodeAnalysis;
+   using System.Reflection;
    using Execution;
 
    /// <summary>
@@ -45,12 +46,17 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       private readonly List<Type> _handlerExecutionOrdering = new List<Type>();
 
       /// <summary>
+      /// List of assemblies used to scan in the the <see cref="Execution.SelectedAssemblyScanner"/>
+      /// </summary>
+      private readonly List<Assembly> _assembliesToScan = new List<Assembly>();
+
+      /// <summary>
       /// Initializes a new instance of the <see cref="ModuleConfig"/> class.
       /// </summary>
       public ModuleConfig()
       {
          // set module defaults
-         var scanner = new InstanceConfig<IAssemblyScanner> { ConcreteType = typeof(WorkingDirectoryScanner) };
+         var scanner = new InstanceConfig<IAssemblyScanner> { ConcreteType = typeof(WorkingDirectoryScanner), IsSingleton = true };
          _instanceConfigs.Add(scanner.PluginType, scanner);
 
          var pipe = new InstanceConfig<IExecutionPipe> { ConcreteType = typeof(SingleThreadPipe) };
@@ -97,6 +103,20 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       {
          _instanceConfigs[typeof(IAssemblyScanner)].ConcreteType = typeof(TScanner);
          _instanceConfigs[typeof(IAssemblyScanner)].IsSingleton = singleton;
+         return this;
+      }
+
+      /// <summary>
+      /// Sets a list of specific assemblies to used for type scanning. If ommitted
+      /// all assemblies in the current working directory are scanned.
+      /// </summary>
+      /// <param name="assemblySelector">Select assemblies to scan.</param>
+      /// <returns>Module configuration instance.</returns>
+      public ModuleConfig ScanSpecificAssemblies(Action<AssemblySelector> assemblySelector)
+      {
+         UseScanner<SelectedAssemblyScanner>(true);
+         assemblySelector(new AssemblySelector(_assembliesToScan));
+
          return this;
       }
 
@@ -182,6 +202,7 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
          RegisterExecModule(singleton);
          RegisterDependencies(singleton);
 
+         SetAssembliesToScan();
          SetPreferedOrder();
 
          return _builder.GetInstance<IExecutionModule>();
@@ -194,6 +215,18 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       {
          IMessageHandlerCreator handlerCreator = _builder.GetInstance<IMessageHandlerCreator>();
          handlerCreator.SetPreferredOrder(_handlerExecutionOrdering);
+      }
+
+      /// <summary>
+      /// Applies configuration to the <see cref="SelectedAssemblyScanner"/>
+      /// </summary>
+      private void SetAssembliesToScan()
+      {
+         SelectedAssemblyScanner scanner = _builder.GetInstance<SelectedAssemblyScanner>();
+         if (scanner != null)
+         {
+            scanner.SetAssembliesToScan(_assembliesToScan);
+         }
       }
 
       /// <summary>
