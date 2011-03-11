@@ -21,9 +21,8 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    using System;
    using System.Collections.Generic;
    using System.IO;
-   using System.Linq;
    using System.Reflection;
-   using log4net;
+   
 
    /// <summary>
    /// Scans all assemblies of the current working directory for
@@ -31,6 +30,19 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    /// </summary>
    public class WorkingDirectoryScanner : AssemblyScanner, IAssemblyScanner
    {
+      /// <summary>
+      /// Used for logging.
+      /// </summary>
+      private readonly IAsyncLibLog _log;
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="WorkingDirectoryScanner"/> class.
+      /// </summary>
+      public WorkingDirectoryScanner(IAsyncLibLog log)
+      {
+         _log = log;
+      }
+
       /// <summary>
       /// Scan for message handlers.
       /// </summary>
@@ -86,6 +98,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
          catch (BadImageFormatException)
          {
             // file is not a .net assembly.
+            _log.Info(@"Skip file scanning. File is not a .NET assembly: " + fileName);
          }
 
          return handlers ?? new Type[0];

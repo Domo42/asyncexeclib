@@ -42,13 +42,19 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IModuleManager _moduleManager;
 
       /// <summary>
+      /// The logger.
+      /// </summary>
+      private readonly IAsyncLibLog _log;
+
+      /// <summary>
       /// Creates a new <see cref="MessageHandlerExecutionJob&lt;T&gt;"/> instance.
       /// </summary>
-      public MessageHandlerExecutionJob(TMessage message, IMessageHandlerCreator handleCreator, IModuleManager moduleManager)
+      public MessageHandlerExecutionJob(TMessage message, IMessageHandlerCreator handleCreator, IModuleManager moduleManager, IAsyncLibLog log)
       {
          _message = message;
          _handlerCreator = handleCreator;
          _moduleManager = moduleManager;
+         _log = log;
       }
 
       /// <summary>
@@ -56,12 +62,11 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       public void Execute()
       {
-         var handlers = _handlerCreator.Create(_message);
-
-         _moduleManager.OnStart();
-
          try
          {
+            _moduleManager.OnStart();
+            var handlers = _handlerCreator.Create(_message);
+
             foreach (var handler in handlers)
             {
                handler.Handle(_message);
@@ -69,6 +74,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
          }
          catch (Exception ex)
          {
+            _log.Error(string.Format("Error handling message {0}.", typeof(TMessage).Name), ex);
             _moduleManager.OnError(ex);
          }
          finally

@@ -51,6 +51,11 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       private readonly List<Assembly> _assembliesToScan = new List<Assembly>();
 
       /// <summary>
+      /// Action to execution before module build is called.
+      /// </summary>
+      private Action _beforeBuild;
+
+   /// <summary>
       /// Initializes a new instance of the <see cref="ModuleConfig"/> class.
       /// </summary>
       public ModuleConfig()
@@ -67,6 +72,9 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
 
          var moduleManager = new InstanceConfig<IModuleManager> { ConcreteType = typeof(ModuleManager), IsSingleton = true };
          _instanceConfigs.Add(moduleManager.PluginType, moduleManager);
+
+         var logger = new InstanceConfig<IAsyncLibLog> { ConcreteType = typeof(DefaultAsyncLibLog), IsSingleton = false };
+         _instanceConfigs.Add(logger.ConcreteType, logger);
       }
 
       /// <summary>
@@ -121,6 +129,19 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       }
 
       /// <summary>
+      /// Instruct the module to create instances of a certain logger type. If not configured
+      /// the <see cref="DefaultAsyncLibLog"/> will be used. You should rarely need this. The
+      /// recommended way to take care errors is to implement a message module.
+      /// </summary>
+      /// <typeparam name="TLogger">Type of log instance to created.</typeparam>
+      /// <returns>Module configuration instance.</returns>
+      public ModuleConfig UseLogger<TLogger>() where TLogger : IAsyncLibLog
+      {
+         _instanceConfigs[typeof(IAsyncLibLog)].ConcreteType = typeof(TLogger);
+         return this;
+      }
+
+      /// <summary>
       /// Specifiy a message handler type to be exeucted before the others.
       /// </summary>
       /// <typeparam name="TMEssageHandler">Type of the message handler.</typeparam>
@@ -150,6 +171,20 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       }
 
       /// <summary>
+      /// Specify an action to be called before the execution module is constructed
+      /// by <see cref="IBuilder"/>. This method can be used to update some last
+      /// minute configuration. For example the DI container.
+      /// </summary>
+      /// <param name="action">Action to execute.</param>
+      /// <returns>Module configuration instance.</returns>
+      public ModuleConfig BeforeExecutionModuleBuild(Action action)
+      {
+         _beforeBuild = action;
+
+         return this;
+      }
+
+      /// <summary>
       /// Builds a new singleton execution module instance.
       /// </summary>
       /// <returns>The execution module</returns>
@@ -168,6 +203,11 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
 
          SetAssembliesToScan();
          SetPreferedOrder();
+
+         if (_beforeBuild != null)
+         {
+            _beforeBuild();
+         }
 
          return _builder.GetInstance<IExecutionModule>();
       }

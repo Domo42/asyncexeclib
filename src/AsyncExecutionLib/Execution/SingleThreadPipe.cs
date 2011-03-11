@@ -21,7 +21,6 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    using System;
    using System.Collections.Concurrent;
    using System.Threading;
-   using log4net;
 
    /// <summary>
    /// Executes incoming jobs on a single worker thread.
@@ -31,7 +30,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <summary>
       /// Used for logging.
       /// </summary>
-      private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+      private readonly IAsyncLibLog _log;
 
       /// <summary>
       /// List of added but not yet handled messages;
@@ -46,8 +45,10 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <summary>
       /// Creates a new instance of the <see cref="SingleThreadPipe"/> class.
       /// </summary>
-      public SingleThreadPipe()
+      public SingleThreadPipe(IAsyncLibLog log)
       {
+         _log = log;
+
          var execThread = new Thread(ExecutionThread);
          execThread.IsBackground = true;
          execThread.Start();
@@ -91,7 +92,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
             }
             catch (Exception ex)
             {
-               _log.Error("Execution of job failed.", ex);
+               _log.Error(@"Execution of job failed.", ex);
             }
          }
       }
