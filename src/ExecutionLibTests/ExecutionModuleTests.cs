@@ -65,13 +65,13 @@ namespace ExecutionLibTests
          _handlerCreator.Stub(x => x.Create<SeparateMessage>(null))
             .IgnoreArguments().Return(new [] { _handler });
 
-         _sut = new ExecutionModule(_execPipe, _handlerCreator, MockRepository.GenerateStub<IModuleManager>());
+         _sut = new ExecutionModule(_execPipe, _handlerCreator, MockRepository.GenerateStub<IModuleManager>(), MockRepository.GenerateStub<IAsyncLibLog>());
       }
 
       /// <summary>
       /// given => An imessage instance.
       /// when  => Add method called.
-      /// then  => Message handler job added to pip.
+      /// then  => Message handler job added to pipe.
       /// </summary>
       [Test]
       public void Add_Message_AddMessageHandlerJobToPipe()

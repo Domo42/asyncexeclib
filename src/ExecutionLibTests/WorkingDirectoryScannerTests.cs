@@ -25,6 +25,7 @@ namespace ExecutionLibTests
    using OnyxOx.AsyncExecutionLib;
    using OnyxOx.AsyncExecutionLib.Execution;
    using NUnit.Framework;
+   using Rhino.Mocks;
 
    [TestFixture]
    public class WorkingDirectoryScannerTests
@@ -40,7 +41,7 @@ namespace ExecutionLibTests
       [SetUp]
       public void Init()
       {
-         _sut = new WorkingDirectoryScanner();
+         _sut = new WorkingDirectoryScanner(MockRepository.GenerateStub<IAsyncLibLog>());
       }
 
       /// <summary>

@@ -39,12 +39,8 @@
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\ext\log4net\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\AssemblySelector.cs" />
@@ -54,6 +50,7 @@
     <Compile Include="Configuration\ModuleConfig.cs" />
     <Compile Include="Execution\ActionExecutionJob.cs" />
     <Compile Include="Execution\AssemblyScanner.cs" />
+    <Compile Include="Execution\DefaultAsyncLibLog.cs" />
     <Compile Include="Execution\SelectedAssemblyScanner.cs" />
     <Compile Include="Execution\ExecutionModule.cs" />
     <Compile Include="Execution\IExecutionPipe.cs" />
@@ -67,6 +64,7 @@
     <Compile Include="Execution\WorkingDirectoryScanner.cs" />
     <Compile Include="IBuilder.cs" />
     <Compile Include="IExecutionModule.cs" />
+    <Compile Include="IAsyncLibLog.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="Execution\IAssemblyScanner.cs" />

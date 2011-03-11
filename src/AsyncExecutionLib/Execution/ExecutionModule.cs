@@ -27,6 +27,11 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    public class ExecutionModule : IExecutionModule
    {
       /// <summary>
+      /// Used for logging.
+      /// </summary>
+      private readonly IAsyncLibLog _log;
+
+      /// <summary>
       /// Executes jobs on a separate thread.
       /// </summary>
       private readonly IExecutionPipe _execPipe;
@@ -49,23 +54,24 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <summary>
       /// Initializes a new instance of the <see cref="ExecutionModule"/> class.
       /// </summary>
-      public ExecutionModule(IExecutionPipe execPipe, IMessageHandlerCreator handlerCreator, IModuleManager moduleManager)
+      public ExecutionModule(IExecutionPipe execPipe, IMessageHandlerCreator handlerCreator, IModuleManager moduleManager, IAsyncLibLog log)
       {
          _execPipe = execPipe;
          _handlerCreator = handlerCreator;
          _moduleManager = moduleManager;
+         _log = log;
       }
 
       /// <summary>
       /// Add a message to be handled.
       /// </summary>
       /// <param name="message">The message</param>
-      public void Add(IMessage message)
+      public virtual void Add(IMessage message)
       {
          Type msgType = message.GetType();
          Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));
 
-         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator, _moduleManager);
+         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator, _moduleManager, _log);
          _execPipe.Add(job);
       }
 
@@ -73,9 +79,9 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// Action to be executed.
       /// </summary>
       /// <param name="action">The action delegate to execute.</param>
-      public void Add(Action action)
+      public virtual void Add(Action action)
       {
-         _execPipe.Add(new ActionExecutionJob(action, _moduleManager));
+         _execPipe.Add(new ActionExecutionJob(action, _moduleManager, _log));
       }
    }
 }

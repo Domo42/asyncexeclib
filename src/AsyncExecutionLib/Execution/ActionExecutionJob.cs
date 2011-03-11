@@ -36,12 +36,18 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IModuleManager _moduleManager;
 
       /// <summary>
+      /// Used for logging.
+      /// </summary>
+      private readonly IAsyncLibLog _log;
+
+      /// <summary>
       /// Initializes a new instance of the <see cref="ActionExecutionJob"/> class.
       /// </summary>
-      public ActionExecutionJob(Action action, IModuleManager moduleManager)
+      public ActionExecutionJob(Action action, IModuleManager moduleManager, IAsyncLibLog log)
       {
          _action = action;
          _moduleManager = moduleManager;
+         _log = log;
       }
 
       /// <summary>
@@ -57,6 +63,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
          }
          catch (Exception ex)
          {
+            _log.Error("Error execution action.", ex);
             _moduleManager.OnError(ex);
          }
          finally
