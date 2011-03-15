@@ -1,0 +1,24 @@
+
+DISCLAIMER
+
+This software is using the following 3rd party software libraries at runtime:
+
+* StructureMap
+http://structuremap.net/structuremap/
+Licensed unter the Apache License, Version 2.0
+
+
+Additionally the following libraries where used to help during development:
+
+* NUnit
+http://www.nunit.org/
+
+* Rhino Mocks
+http://www.ayende.com
+
+* Microsoft Visual Studio 2010
+http://www.microsoft.com/visualstudio
+
+* MSBuild Community Tasks
+http://msbuildtasks.tigris.org/
+
