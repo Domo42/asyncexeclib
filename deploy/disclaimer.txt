@@ -3,10 +3,6 @@ DISCLAIMER
 
 This software is using the following 3rd party software libraries at runtime:
 
-* log4net
-http://logging.apache.org/log4net/
-Licensed unter the Apache License, Version 2.0
-
 * StructureMap
 http://structuremap.net/structuremap/
 Licensed unter the Apache License, Version 2.0

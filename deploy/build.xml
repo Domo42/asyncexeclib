@@ -22,8 +22,6 @@
    <ItemGroup>
       <AsyncLibraryFiles Include="$(ExecLibOutDir)\OnyxOx.AsyncExecutionLib.dll" />
       <AsyncLibraryFiles Include="$(ExecLibOutDir)\OnyxOx.AsyncExecutionLib.xml" />
-      <AsyncLibraryFiles Include="$(ExecLibOutDir)\log4net.dll" />
-      <AsyncLibraryFiles Include="$(ExecLibOutDir)\log4net.xml" />
       <AsyncLibraryFiles Include="$(SmBuilderOutDir)\OnyxOx.AsyncExecutionLib.StructureMapBuilder.dll" />
       <AsyncLibraryFiles Include="$(SmBuilderOutDir)\OnyxOx.AsyncExecutionLib.StructureMapBuilder.xml" />
       <AsyncLibraryFiles Include="$(SmBuilderOutDir)\StructureMap.dll" />
