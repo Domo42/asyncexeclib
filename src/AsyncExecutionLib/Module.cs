@@ -45,5 +45,31 @@ namespace OnyxOx.AsyncExecutionLib
          config.UseScanner<WorkingDirectoryScanner>();
          return config;
       }
+
+      /// <summary>
+      /// Configures the execution module with multiple worker threads for execution of
+      /// message handlers.
+      /// </summary>
+      /// <param name="config">Module configuration instance</param>
+      /// <param name="numWokerThreads">Number of worker threads to use.</param>
+      /// <returns>Module configuration instance</returns>
+      public static ModuleConfig UseMultipleWorkerThreads(this ModuleConfig config, int numWokerThreads)
+      {
+         config.InstanceConfiguration[typeof(IExecutionPipe)].ConcreteType = typeof(MultiThreadPipe);
+         config.InstanceConfiguration[typeof(IExecutionPipe)].IsSingleton = true;
+
+         config.AddInitilizationAction(builder =>
+               {
+                  var execPipe = builder.GetInstance<IExecutionPipe>() as MultiThreadPipe;
+                  if (execPipe != null)
+                  {
+                     // one thread already present in exec pipe
+                     int threadsToAdd = numWokerThreads - 1;
+                     execPipe.IncreaseWorkerThreads(threadsToAdd);
+                  }
+               });
+
+         return config;
+      }
    }
 }

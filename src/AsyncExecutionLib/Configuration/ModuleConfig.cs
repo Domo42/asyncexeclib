@@ -51,11 +51,16 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       private readonly List<Assembly> _assembliesToScan = new List<Assembly>();
 
       /// <summary>
+      /// List of actions to execute during module initialization.
+      /// </summary>
+      private readonly List<Action<IBuilder>> _intializationActions = new List<Action<IBuilder>>();
+
+      /// <summary>
       /// Action to execution before module build is called.
       /// </summary>
       private Action _beforeBuild;
 
-   /// <summary>
+      /// <summary>
       /// Initializes a new instance of the <see cref="ModuleConfig"/> class.
       /// </summary>
       public ModuleConfig()
@@ -75,6 +80,23 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
 
          var logger = new InstanceConfig<IAsyncLibLog> { ConcreteType = typeof(DefaultAsyncLibLog), IsSingleton = false };
          _instanceConfigs.Add(logger.ConcreteType, logger);
+      }
+
+      /// <summary>
+      /// Gets the current instance configuration settings.
+      /// </summary>
+      internal IDictionary<Type, IInstanceConfig> InstanceConfiguration
+      {
+         get { return _instanceConfigs; }
+      }
+
+      /// <summary>
+      /// Adds an action to be executed after configuration, before instances are build.
+      /// </summary>
+      /// <param name="action">Action to execute.</param>
+      internal void AddInitilizationAction(Action<IBuilder> action)
+      {
+         _intializationActions.Add(action);
       }
 
       /// <summary>
@@ -201,13 +223,19 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
          RegisterExecModule(true);
          RegisterDependencies(true);
 
-         SetAssembliesToScan();
-         SetPreferedOrder();
+         foreach (var action in _intializationActions)
+         {
+            action(_builder);
+         }
 
+         // call action before any actual objects are build.
          if (_beforeBuild != null)
          {
             _beforeBuild();
          }
+
+         SetAssembliesToScan();
+         SetPreferedOrder();
 
          return _builder.GetInstance<IExecutionModule>();
       }

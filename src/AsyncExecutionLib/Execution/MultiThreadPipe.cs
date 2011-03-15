@@ -23,9 +23,9 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    using System.Threading;
 
    /// <summary>
-   /// Executes incoming jobs on a single worker thread.
+   /// Execution pipe using multiple worker threads.
    /// </summary>
-   public class SingleThreadPipe : IExecutionPipe
+   public class MultiThreadPipe : IExecutionPipe
    {
       /// <summary>
       /// Used for logging.
@@ -33,7 +33,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IAsyncLibLog _log;
 
       /// <summary>
-      /// List of added but not yet handled messages;
+      /// List of jobs to execute.
       /// </summary>
       private readonly BlockingCollection<IJob> _jobs = new BlockingCollection<IJob>();
 
@@ -43,33 +43,37 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private bool _isDisposed;
 
       /// <summary>
-      /// Creates a new instance of the <see cref="SingleThreadPipe"/> class.
+      /// Initializes a new instance of the <see cref="MultiThreadPipe"/> class.
       /// </summary>
-      public SingleThreadPipe(IAsyncLibLog log)
+      public MultiThreadPipe(IAsyncLibLog log)
       {
          _log = log;
 
-         var execThread = new Thread(ExecutionThread);
-         execThread.IsBackground = true;
-         execThread.Start();
+         // have at least one worker.
+         IncreaseWorkerThreads(1);
       }
 
       /// <summary>
-      /// Adds a message into the pipe to be handled.
+      /// Adds a job into the pipe to be executed.
       /// </summary>
-      /// <param name="job">Input job.</param>
+      /// <param name="job">Job to exeucte.</param>
       public void Add(IJob job)
       {
          _jobs.Add(job);
       }
 
       /// <summary>
-      /// Dispose current instance.
+      /// Increases the number of worker threads used to execute jobs.
       /// </summary>
-      public void Dispose()
+      /// <param name="newWorkers">Number of worker threads to create.</param>
+      public void IncreaseWorkerThreads(int newWorkers)
       {
-         Dispose(true);
-         GC.SuppressFinalize(this);
+         for (int i = 0; i < newWorkers; ++i)
+         {
+            var execThread = new Thread(ExecutionThread);
+            execThread.IsBackground = true;
+            execThread.Start();
+         }
       }
 
       /// <summary>
@@ -103,6 +107,15 @@ namespace OnyxOx.AsyncExecutionLib.Execution
             // this finally block will always get executed.
             _log.Info(@"Worker thread closed.");
          }
+      }
+
+      /// <summary>
+      /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+      /// </summary>
+      public void Dispose()
+      {
+         Dispose(true);
+         GC.SuppressFinalize(this);
       }
 
       /// <summary>
