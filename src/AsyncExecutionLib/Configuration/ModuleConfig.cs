@@ -79,7 +79,7 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
          _instanceConfigs.Add(moduleManager.PluginType, moduleManager);
 
          var logger = new InstanceConfig<IAsyncLibLog> { ConcreteType = typeof(DefaultAsyncLibLog), IsSingleton = false };
-         _instanceConfigs.Add(logger.ConcreteType, logger);
+         _instanceConfigs.Add(logger.PluginType, logger);
       }
 
       /// <summary>
