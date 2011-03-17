@@ -95,6 +95,11 @@ namespace OnyxOx.AsyncExecutionLib.Execution
             Assembly assembly = Assembly.Load(assemblyName);
             handlers = ScanAssembly(assembly, targeType);
          }
+         catch (ReflectionTypeLoadException ex)
+         {
+            // assembly could not be scanned because of missing dependencies.
+            _log.Error(@"Error scanning assembly.", ex);
+         }
          catch (BadImageFormatException)
          {
             // file is not a .net assembly.
