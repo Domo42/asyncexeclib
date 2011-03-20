@@ -20,6 +20,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
 {
    using System;
    using System.Collections.Generic;
+   using System.Linq;
 
    /// <summary>
    /// Creates the messagem module instances and calls the modules
@@ -57,7 +58,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       public void OnFinished()
       {
-         foreach (IMessageModule module in _modules)
+         foreach (IMessageModule module in _modules.Reverse<IMessageModule>())
          {
             module.OnFinished();
          }
@@ -70,7 +71,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <param name="ex">The exception thrown.</param>
       public void OnError(Exception ex)
       {
-         foreach (IMessageModule module in _modules)
+         foreach (IMessageModule module in _modules.Reverse<IMessageModule>())
          {
             module.OnError(ex);
          }
