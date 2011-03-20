@@ -47,6 +47,11 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IModuleManager _moduleManager;
 
       /// <summary>
+      /// Message execution context.
+      /// </summary>
+      private readonly ILocalContext _context;
+
+      /// <summary>
       /// Closed handler job types based on message types.
       /// </summary>
       private readonly ConcurrentDictionary<Type, Type> _handlerJobTypes = new ConcurrentDictionary<Type,Type>();
@@ -54,12 +59,18 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <summary>
       /// Initializes a new instance of the <see cref="ExecutionModule"/> class.
       /// </summary>
-      public ExecutionModule(IExecutionPipe execPipe, IMessageHandlerCreator handlerCreator, IModuleManager moduleManager, IAsyncLibLog log)
+      public ExecutionModule(
+            IExecutionPipe execPipe,
+            IMessageHandlerCreator handlerCreator,
+            IModuleManager moduleManager,
+            IAsyncLibLog log,
+            ILocalContext context)
       {
          _execPipe = execPipe;
          _handlerCreator = handlerCreator;
          _moduleManager = moduleManager;
          _log = log;
+         _context = context;
       }
 
       /// <summary>
@@ -71,7 +82,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
          Type msgType = message.GetType();
          Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));
 
-         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator, _moduleManager, _log);
+         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator, _moduleManager, _log, _context);
          _execPipe.Add(job);
       }
 

@@ -47,14 +47,25 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IAsyncLibLog _log;
 
       /// <summary>
+      /// The thread local execution context.
+      /// </summary>
+      private readonly ILocalContext _context;
+
+      /// <summary>
       /// Creates a new <see cref="MessageHandlerExecutionJob&lt;T&gt;"/> instance.
       /// </summary>
-      public MessageHandlerExecutionJob(TMessage message, IMessageHandlerCreator handleCreator, IModuleManager moduleManager, IAsyncLibLog log)
+      public MessageHandlerExecutionJob(
+         TMessage message,
+         IMessageHandlerCreator handleCreator,
+         IModuleManager moduleManager,
+         IAsyncLibLog log,
+         ILocalContext context)
       {
          _message = message;
          _handlerCreator = handleCreator;
          _moduleManager = moduleManager;
          _log = log;
+         _context = context;
       }
 
       /// <summary>
@@ -64,6 +75,8 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       {
          try
          {
+            InitExecutionContext();
+
             _moduleManager.OnStart();
             var handlers = _handlerCreator.Create(_message);
 
@@ -80,6 +93,18 @@ namespace OnyxOx.AsyncExecutionLib.Execution
          finally
          {
             _moduleManager.OnFinished();
+         }
+      }
+
+      /// <summary>
+      /// Initialize thread local execution context.
+      /// </summary>
+      private void InitExecutionContext()
+      {
+         LocalContext context = _context as LocalContext;
+         if (context != null)
+         {
+            context.Initialize(_message);
          }
       }
    }

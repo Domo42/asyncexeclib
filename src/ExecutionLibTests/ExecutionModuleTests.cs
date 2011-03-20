@@ -53,6 +53,11 @@ namespace ExecutionLibTests
       private ExtractHandledMessageHandler _handler;
 
       /// <summary>
+      /// Thread local execution context.
+      /// </summary>
+      private ILocalContext _context;
+
+      /// <summary>
       /// Init every test.
       /// </summary>
       [SetUp]
@@ -60,12 +65,13 @@ namespace ExecutionLibTests
       {
          _handler = new ExtractHandledMessageHandler(m => _message = m);
          _execPipe = MockRepository.GenerateMock<IExecutionPipe>();
+         _context = MockRepository.GenerateMock<ILocalContext>();
 
          _handlerCreator = MockRepository.GenerateMock<IMessageHandlerCreator>();
          _handlerCreator.Stub(x => x.Create<SeparateMessage>(null))
             .IgnoreArguments().Return(new [] { _handler });
 
-         _sut = new ExecutionModule(_execPipe, _handlerCreator, MockRepository.GenerateStub<IModuleManager>(), MockRepository.GenerateStub<IAsyncLibLog>());
+         _sut = new ExecutionModule(_execPipe, _handlerCreator, MockRepository.GenerateStub<IModuleManager>(), MockRepository.GenerateStub<IAsyncLibLog>(), _context);
       }
 
       /// <summary>
