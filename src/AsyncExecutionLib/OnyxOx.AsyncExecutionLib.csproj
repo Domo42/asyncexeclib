@@ -50,6 +50,7 @@
     <Compile Include="Execution\ActionExecutionJob.cs" />
     <Compile Include="Execution\AssemblyScanner.cs" />
     <Compile Include="Execution\DefaultAsyncLibLog.cs" />
+    <Compile Include="Execution\LocalContext.cs" />
     <Compile Include="Execution\MultiThreadPipe.cs" />
     <Compile Include="Execution\SelectedAssemblyScanner.cs" />
     <Compile Include="Execution\ExecutionModule.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="IBuilder.cs" />
     <Compile Include="IExecutionModule.cs" />
     <Compile Include="IAsyncLibLog.cs" />
+    <Compile Include="ILocalContext.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="Execution\IAssemblyScanner.cs" />
