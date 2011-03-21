@@ -33,6 +33,13 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private IEnumerable<Assembly> _assemblies = new List<Assembly>();
 
       /// <summary>
+      /// Initializes a new instance of the <see cref="SelectedAssemblyScanner"/> class.
+      /// </summary>
+      public SelectedAssemblyScanner()
+      {   
+      }
+
+      /// <summary>
       /// Sets a list to scan for assemblies.
       /// </summary>
       public void SetAssembliesToScan(IEnumerable<Assembly> assemblies)

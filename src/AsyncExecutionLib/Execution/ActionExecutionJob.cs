@@ -41,13 +41,19 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IAsyncLibLog _log;
 
       /// <summary>
+      /// Thread local execution context.
+      /// </summary>
+      private readonly ILocalContext _context;
+
+      /// <summary>
       /// Initializes a new instance of the <see cref="ActionExecutionJob"/> class.
       /// </summary>
-      public ActionExecutionJob(Action action, IModuleManager moduleManager, IAsyncLibLog log)
+      public ActionExecutionJob(Action action, IModuleManager moduleManager, IAsyncLibLog log, ILocalContext context)
       {
          _action = action;
          _moduleManager = moduleManager;
          _log = log;
+         _context = context;
       }
 
       /// <summary>
@@ -55,10 +61,12 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       public void Execute()
       {
-         _moduleManager.OnStart();
-
          try
          {
+            InitExecutionContext();
+
+            _moduleManager.OnStart();
+
             _action.Invoke();
          }
          catch (Exception ex)
@@ -69,6 +77,18 @@ namespace OnyxOx.AsyncExecutionLib.Execution
          finally
          {
             _moduleManager.OnFinished();
+         }
+      }
+
+      /// <summary>
+      /// Initialize thread local execution context.
+      /// </summary>
+      private void InitExecutionContext()
+      {
+         LocalContext context = _context as LocalContext;
+         if (context != null)
+         {
+            context.Initialize(null);
          }
       }
    }

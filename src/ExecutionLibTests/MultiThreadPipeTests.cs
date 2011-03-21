@@ -42,6 +42,11 @@ namespace ExecutionLibTests
       /// Mocked module manager.
       /// </summary>
       private IModuleManager _moduleManager;
+
+      /// <summary>
+      /// Mocked execution context.
+      /// </summary>
+      private ILocalContext _context;
       
 
       /// <summary>
@@ -52,6 +57,7 @@ namespace ExecutionLibTests
       {
          _log = MockRepository.GenerateStub<IAsyncLibLog>();
          _moduleManager = MockRepository.GenerateStub<IModuleManager>();
+         _context = MockRepository.GenerateStub<ILocalContext>();
 
          _sut = new MultiThreadPipe(_log);
       }
@@ -68,7 +74,7 @@ namespace ExecutionLibTests
          bool hasBeenExecuted = false;
          var waitEvent = new EventWaitHandle(false, EventResetMode.ManualReset);
          Action action = () => { hasBeenExecuted = true; waitEvent.Set(); };
-         var job = new ActionExecutionJob(action, _moduleManager, _log);
+         var job = new ActionExecutionJob(action, _moduleManager, _log, _context);
 
          // when
          _sut.Add(job);
