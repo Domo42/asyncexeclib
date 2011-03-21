@@ -44,5 +44,11 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       /// <param name="ex">The exception thrown.</param>
       void OnError(Exception ex);
+
+      /// <summary>
+      /// Sets a a prefered execution order for message module instances.
+      /// </summary>
+      /// <param name="modules">List of message module types in expected order.</param>
+      void SetPreferredOrder(IEnumerable<Type> modules);
    }
 }

@@ -46,6 +46,11 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       private readonly List<Type> _handlerExecutionOrdering = new List<Type>();
 
       /// <summary>
+      /// List of message module types to be in this order.
+      /// </summary>
+      private readonly List<Type> _moduleExecutionOrdering = new List<Type>();
+
+      /// <summary>
       /// List of assemblies used to scan in the the <see cref="Execution.SelectedAssemblyScanner"/>
       /// </summary>
       private readonly List<Assembly> _assembliesToScan = new List<Assembly>();
@@ -169,11 +174,11 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       /// <summary>
       /// Specifiy a message handler type to be exeucted before the others.
       /// </summary>
-      /// <typeparam name="TMEssageHandler">Type of the message handler.</typeparam>
-      /// <returns>Handler ordering instruction.</returns>
-      public ModuleConfig FirstExecute<TMEssageHandler>()
+      /// <typeparam name="TMessageHandler">Type of the message handler.</typeparam>
+      /// <returns>Module configuration instance.</returns>
+      public ModuleConfig FirstExecute<TMessageHandler>()
       {
-         _handlerExecutionOrdering.Add(typeof(TMEssageHandler));
+         _handlerExecutionOrdering.Add(typeof(TMessageHandler));
          return this;
       }
 
@@ -185,13 +190,41 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       /// <typeparam name="TMessageHandler">Type of the message handler.</typeparam>
       /// <param name="additionalOrdering">Configuration action to specify addtional handlers.</param>
       /// <returns>Module configuration instance.</returns>
-      public ModuleConfig FirstExecute<TMessageHandler>(Action<HandlerOrdering> additionalOrdering)
+      public ModuleConfig FirstExecute<TMessageHandler>(Action<ExecutionOrdering> additionalOrdering)
       {
          _handlerExecutionOrdering.Add(typeof(TMessageHandler));
 
-         var nextHandlers = new HandlerOrdering(_handlerExecutionOrdering);
+         var nextHandlers = new ExecutionOrdering(_handlerExecutionOrdering);
          additionalOrdering(nextHandlers);
 
+         return this;
+      }
+
+      /// <summary>
+      /// Specifiy a message module type to be exeucted for other modules.
+      /// </summary>
+      /// <typeparam name="TMessageModule">Type of the message module.</typeparam>
+      /// <returns>Module configuration instance.</returns>
+      public ModuleConfig FirstExecuteModule<TMessageModule>()
+      {
+         _moduleExecutionOrdering.Add(typeof(TMessageModule));
+         return this;
+      }
+
+      /// <summary>
+      /// Specifiy a message module type to be exeucted for other modules.
+      /// </summary>
+      /// <param name="additionalOrdering">Configuration action to specifiy additional module types
+      /// to be executed in given order.</param>
+      /// <typeparam name="TMessageModule">Type of the message module.</typeparam>
+      /// <returns>Module configuration instance.</returns>
+      public ModuleConfig FirstExecuteModule<TMessageModule>(Action<ExecutionOrdering> additionalOrdering)
+      {
+         _moduleExecutionOrdering.Add(typeof(TMessageModule));
+
+         var nextModules = new ExecutionOrdering(_moduleExecutionOrdering);
+         additionalOrdering(nextModules);
+         
          return this;
       }
 
@@ -205,7 +238,6 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       public ModuleConfig BeforeExecutionModuleBuild(Action action)
       {
          _beforeBuild = action;
-
          return this;
       }
 
@@ -250,6 +282,9 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       {
          IMessageHandlerCreator handlerCreator = _builder.GetInstance<IMessageHandlerCreator>();
          handlerCreator.SetPreferredOrder(_handlerExecutionOrdering);
+
+         IModuleManager moduleManager = _builder.GetInstance<IModuleManager>();
+         moduleManager.SetPreferredOrder(_moduleExecutionOrdering);
       }
 
       /// <summary>
