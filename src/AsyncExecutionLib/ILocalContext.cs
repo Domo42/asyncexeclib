@@ -46,6 +46,13 @@ namespace OnyxOx.AsyncExecutionLib
       TEntry Get<TEntry>(object key);
 
       /// <summary>
+      /// Sets a local context variable.
+      /// </summary>
+      /// <param name="key">Key of the local variable.</param>
+      /// <param name="value">Value associated with the key.</param>
+      void Set(object key, object value);
+
+      /// <summary>
       /// Gets a local context variable of a specifiy type.
       /// </summary>
       /// <typeparam name="TEntry">Type of the variable.</typeparam>
