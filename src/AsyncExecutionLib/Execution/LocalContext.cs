@@ -30,13 +30,13 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// The message to which this context is assigned to.
       /// </summary>
       [ThreadStatic]
-      private IMessage _message;
+      private static IMessage _message;
 
       /// <summary>
       /// Holds a list of thread local entries.
       /// </summary>
       [ThreadStatic]
-      private Dictionary<object, object> _contextVariables;
+      private static Dictionary<object, object> _contextVariables;
 
       /// <summary>
       /// Initializes the current execution context with the given message.
