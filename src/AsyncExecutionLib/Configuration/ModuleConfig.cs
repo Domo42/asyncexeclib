@@ -292,7 +292,7 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
       /// </summary>
       private void SetAssembliesToScan()
       {
-         SelectedAssemblyScanner scanner = _builder.GetInstance<SelectedAssemblyScanner>();
+         SelectedAssemblyScanner scanner = _builder.GetInstance<IAssemblyScanner>() as SelectedAssemblyScanner;
          if (scanner != null)
          {
             scanner.SetAssembliesToScan(_assembliesToScan);

@@ -92,7 +92,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <param name="action">The action delegate to execute.</param>
       public virtual void Add(Action action)
       {
-         _execPipe.Add(new ActionExecutionJob(action, _moduleManager, _log));
+         _execPipe.Add(new ActionExecutionJob(action, _moduleManager, _log, _context));
       }
    }
 }
