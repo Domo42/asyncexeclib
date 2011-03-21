@@ -39,6 +39,11 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IBuilder _builder;
 
       /// <summary>
+      /// Multi threading synchronisation.
+      /// </summary>
+      private readonly object _sync = new object();
+
+      /// <summary>
       /// List of stored message modules.
       /// </summary>
       private List<IMessageModule> _modules;
@@ -112,14 +117,18 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       private void CreateModuleInstances()
       {
-         if (_modules == null)
+         // Ensure module creation is done only once for all threads.
+         lock (_sync)
          {
-            _modules = new List<IMessageModule>();
-
-            IEnumerable<Type> moduleTypes = _scanner.ScanForMessageModules();
-            if (moduleTypes != null)
+            if (_modules == null)
             {
-               BuildModuleListAccordingToPreference(moduleTypes);
+               _modules = new List<IMessageModule>();
+
+               IEnumerable<Type> moduleTypes = _scanner.ScanForMessageModules();
+               if (moduleTypes != null)
+               {
+                  BuildModuleListAccordingToPreference(moduleTypes);
+               }
             }
          }
       }
