@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\AssemblySelector.cs" />
-    <Compile Include="Configuration\HandlerOrdering.cs" />
+    <Compile Include="Configuration\ExecutionOrdering.cs" />
     <Compile Include="Configuration\IInstanceConfig.cs" />
     <Compile Include="Configuration\InstanceConfig.cs" />
     <Compile Include="Configuration\ModuleConfig.cs" />

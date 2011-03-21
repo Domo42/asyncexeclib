@@ -29,16 +29,32 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    public class ModuleManager : IModuleManager
    {
       /// <summary>
+      /// Scanner to search for modules.
+      /// </summary>
+      private readonly IAssemblyScanner _scanner;
+
+      /// <summary>
+      /// Builder to create message module instances.
+      /// </summary>
+      private readonly IBuilder _builder;
+
+      /// <summary>
       /// List of stored message modules.
       /// </summary>
-      private readonly List<IMessageModule> _modules = new List<IMessageModule>();
+      private List<IMessageModule> _modules;
+
+      /// <summary>
+      /// Prefered execution order.
+      /// </summary>
+      private IEnumerable<Type> _preferredExecutionOrder = new List<Type>();
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ModuleManager"/> class.
       /// </summary>
       public ModuleManager(IAssemblyScanner scanner, IBuilder builder)
       {
-         CreateModuleInstances(scanner, builder);
+         _scanner = scanner;
+         _builder = builder;
       }
 
       /// <summary>
@@ -46,6 +62,8 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       public void OnStart()
       {
+         CreateModuleInstances();
+
          foreach (IMessageModule module in _modules)
          {
             module.OnStart();
@@ -78,20 +96,67 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       }
 
       /// <summary>
+      /// Sets a a prefered execution order for message module instances.
+      /// </summary>
+      /// <param name="modules">List of message module types in expected order.</param>
+      public void SetPreferredOrder(IEnumerable<Type> modules)
+      {
+         if (modules != null)
+         {
+            _preferredExecutionOrder = modules;
+         }
+      }
+
+      /// <summary>
       /// Create the scanned types message modules instances.
       /// </summary>
-      private void CreateModuleInstances(IAssemblyScanner scanner, IBuilder builder)
+      private void CreateModuleInstances()
       {
-         IEnumerable<Type> moduleTypes = scanner.ScanForMessageModules();
-         if (moduleTypes != null)
+         if (_modules == null)
          {
-            foreach (Type moduleType in moduleTypes)
-            {
-               builder.Register(moduleType, moduleType);
+            _modules = new List<IMessageModule>();
 
-               IMessageModule module = (IMessageModule) builder.GetInstance(moduleType);
-               _modules.Add(module);
+            IEnumerable<Type> moduleTypes = _scanner.ScanForMessageModules();
+            if (moduleTypes != null)
+            {
+               BuildModuleListAccordingToPreference(moduleTypes);
             }
+         }
+      }
+
+      /// <summary>
+      /// Creates the modules instance list in preferred execution order.
+      /// </summary>
+      private void BuildModuleListAccordingToPreference(IEnumerable<Type> scannedModules)
+      {
+         List<Type> moduleTypes = new List<Type>();
+         
+         // first add preferred types.
+         foreach (Type moduleType in _preferredExecutionOrder)
+         {
+            if (scannedModules.Contains(moduleType)
+               && !moduleTypes.Contains(moduleType))
+            {
+               moduleTypes.Add(moduleType);
+            }
+         }
+
+         // add other scanned types
+         foreach (Type moduleType in scannedModules)
+         {
+            if (!moduleTypes.Contains(moduleType))
+            {
+               moduleTypes.Add(moduleType);
+            }
+         }
+
+         // create message module instances
+         foreach (Type moduleType in moduleTypes)
+         {
+            _builder.Register(moduleType, moduleType);
+
+            IMessageModule module = (IMessageModule)_builder.GetInstance(moduleType);
+            _modules.Add(module);
          }
       }
    }

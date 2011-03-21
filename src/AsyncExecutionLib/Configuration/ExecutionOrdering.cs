@@ -24,30 +24,30 @@ namespace OnyxOx.AsyncExecutionLib.Configuration
    /// <summary>
    /// Adds message handler types to the prefered order list.
    /// </summary>
-   public class HandlerOrdering
+   public class ExecutionOrdering
    {
       /// <summary>
       /// Current list of ordered handlers.
       /// </summary>
-      private readonly IList<Type> _orderedHandlers;
+      private readonly IList<Type> _orderedTypes;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="HandlerOrdering"/> class.
+      /// Initializes a new instance of the <see cref="ExecutionOrdering"/> class.
       /// </summary>
-      /// <param name="orderedHandlers">The ordered handlers.</param>
-      public HandlerOrdering(IList<Type> orderedHandlers)
+      /// <param name="orderedTypes">The ordered handlers.</param>
+      public ExecutionOrdering(IList<Type> orderedTypes)
       {
-         _orderedHandlers = orderedHandlers;
+         _orderedTypes = orderedTypes;
       }
 
       /// <summary>
       /// Next message handler in execution chain.
       /// </summary>
-      /// <typeparam name="TMessageHandler">Type of the message handler</typeparam>
-      /// <returns></returns>
-      public HandlerOrdering Then<TMessageHandler>()
+      /// <typeparam name="T">Type to be executed in order.</typeparam>
+      /// <returns>Executio order instance for further configuration.</returns>
+      public ExecutionOrdering Then<T>()
       {
-         _orderedHandlers.Add(typeof(TMessageHandler));
+         _orderedTypes.Add(typeof(T));
          return this;
       }
    }
