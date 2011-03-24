@@ -31,6 +31,12 @@ namespace OnyxOx.AsyncExecutionLib
       IMessage Message { get; }
 
       /// <summary>
+      /// Gets or sets a value indicating whether to stop executing further handler
+      /// of the currently handled message.
+      /// </summary>
+      bool DoNotContinueDispatchingCurrentMessageToHandlers { get; set; }
+
+      /// <summary>
       /// Gets or sets a local context variable to the context.
       /// </summary>
       /// <param name="key">Key of the local variable.</param>
