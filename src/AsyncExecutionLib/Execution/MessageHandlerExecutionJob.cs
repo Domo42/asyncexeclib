@@ -83,6 +83,11 @@ namespace OnyxOx.AsyncExecutionLib.Execution
             foreach (var handler in handlers)
             {
                handler.Handle(_message);
+
+               if (_context.DoNotContinueDispatchingCurrentMessageToHandlers)
+               {
+                  break;
+               }
             }
          }
          catch (Exception ex)

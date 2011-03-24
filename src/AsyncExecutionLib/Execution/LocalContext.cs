@@ -39,11 +39,18 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private static Dictionary<object, object> _contextVariables;
 
       /// <summary>
+      /// Indicates whether to stop executing further handler of this message.
+      /// </summary>
+      [ThreadStatic]
+      private static bool _stopHandlingMessages;
+
+      /// <summary>
       /// Initializes the current execution context with the given message.
       /// Clears any previous data.
       /// </summary>
       public void Initialize(IMessage message)
       {
+         _stopHandlingMessages = false;
          _message = message;
 
          if (_contextVariables == null)
@@ -60,6 +67,16 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       public IMessage Message
       {
          get { return _message; }
+      }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether to stop executing further handler
+      /// of the currently handled message.
+      /// </summary>
+      public bool DoNotContinueDispatchingCurrentMessageToHandlers
+      {
+         get { return _stopHandlingMessages; }
+         set { _stopHandlingMessages = value; }
       }
 
       /// <summary>
