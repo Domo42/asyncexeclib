@@ -79,10 +79,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <param name="message">The message</param>
       public virtual void Add(IMessage message)
       {
-         Type msgType = message.GetType();
-         Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));
-
-         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator, _moduleManager, _log, _context);
+         IJob job = CreateMessageHandlerExecutionJob(message);
          _execPipe.Add(job);
       }
 
@@ -93,6 +90,30 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       public virtual void Add(Action action)
       {
          _execPipe.Add(new ActionExecutionJob(action, _moduleManager, _log, _context));
+      }
+
+      /// <summary>
+      /// Handle the message in a synchron operation. This will not put
+      /// the message into the configured execution pipe.
+      /// </summary>
+      /// <param name="message">The message to handle.</param>
+      public void Handle(IMessage message)
+      {
+         IJob job = CreateMessageHandlerExecutionJob(message);
+         job.Execute();
+      }
+
+      /// <summary>
+      /// Creates the job for message handler execution.
+      /// </summary>
+      /// <returns>The created job instance.</returns>
+      private IJob CreateMessageHandlerExecutionJob(IMessage message)
+      {
+         Type msgType = message.GetType();
+         Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));
+
+         IJob job = (IJob)Activator.CreateInstance(jobType, message, _handlerCreator, _moduleManager, _log, _context);
+         return job;
       }
    }
 }

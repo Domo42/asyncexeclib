@@ -28,7 +28,7 @@ namespace OnyxOx.AsyncExecutionLib
       /// <summary>
       /// Add a message to be handled.
       /// </summary>
-      /// <param name="message">The message</param>
+      /// <param name="message">The message to handle.</param>
       void Add(IMessage message);
 
       /// <summary>
@@ -36,5 +36,12 @@ namespace OnyxOx.AsyncExecutionLib
       /// </summary>
       /// <param name="action">The action delegate to execute.</param>
       void Add(Action action);
+
+      /// <summary>
+      /// Handle the message in a synchron operation. This will not put
+      /// the message into the configured execution pipe.
+      /// </summary>
+      /// <param name="message">The message to handle.</param>
+      void Handle(IMessage message);
    }
 }
