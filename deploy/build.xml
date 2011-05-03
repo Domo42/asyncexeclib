@@ -1,0 +1,65 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         DefaultTargets="Deployment">
+
+   <UsingTask TaskName="UpdateAssemblyVersion" AssemblyFile="$(MSBuildProjectDirectory)\bin\Domo.BuildTasks.dll" />
+   <UsingTask TaskName="MSBuild.Community.Tasks.Zip" AssemblyFile="bin\MSBuild.Community.Tasks.dll"  />
+
+   <PropertyGroup>
+      <Configuration>Release</Configuration>
+      <DeploymentDir>$(MSBuildProjectDirectory)\out</DeploymentDir>
+      <ExecLibOutDir>..\src\AsyncExecutionLib\bin\$(Configuration)</ExecLibOutDir>
+      <SmBuilderOutDir>..\src\AsyncExecutionLib.StructureMapBuilder\bin\$(Configuration)</SmBuilderOutDir>
+   </PropertyGroup>
+
+   <!-- ====== Define the target assembly version number ===== -->
+   <PropertyGroup>
+      <MajorVersion>1</MajorVersion>
+      <MinorVersion>0</MinorVersion>
+      <BuildVersion>0</BuildVersion>
+      <VersionNumber>$(MajorVersion).$(MinorVersion).$(BuildVersion).0</VersionNumber>
+   </PropertyGroup>
+
+   <ItemGroup>
+      <AsyncLibraryFiles Include="$(ExecLibOutDir)\OnyxOx.AsyncExecutionLib.dll" />
+      <AsyncLibraryFiles Include="$(ExecLibOutDir)\OnyxOx.AsyncExecutionLib.xml" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\OnyxOx.AsyncExecutionLib.StructureMapBuilder.dll" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\OnyxOx.AsyncExecutionLib.StructureMapBuilder.xml" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\StructureMap.dll" />
+      <AsyncLibraryFiles Include="$(SmBuilderOutDir)\StructureMap.xml" />
+      <AsyncLibraryFiles Include="..\LICENSE.txt" />
+      <AsyncLibraryFiles Include="disclaimer.txt" />
+   </ItemGroup>
+
+   <!-- Create directory to put files for deplyoment  -->
+   <Target Name="MakeOutputDir">
+      
+      <!-- Delete old directory -->
+      <RemoveDir Directories="$(DeploymentDir)" />
+
+      <!-- Create a new one -->
+      <MakeDir Directories="$(DeploymentDir)" />
+         
+   </Target>
+   
+   <!-- Compile the solution -->
+   <Target Name="Build" DependsOnTargets="MakeOutputDir">
+      
+      <UpdateAssemblyVersion VersionNumber="$(VersionNumber)"
+                             BaseDirectory="$(MSBuildProjectDirectory)\..\"
+                             IgnoreDirectory="\.hg"/>
+      
+      <MSBuild Projects="..\ExecLib.sln" Properties="Configuration=$(Configuration)" />
+   </Target>
+
+   <!-- Copy and zip files to output directory -->
+   <Target Name="Deployment" DependsOnTargets="Build">
+
+      <Zip Files="@(AsyncLibraryFiles)"
+           ZipFileName="$(DeploymentDir)\AsyncExecLib_V$(MajorVersion)_$(MinorVersion)_$(BuildVersion).zip"
+           Flatten="true" />
+
+      <Message Text="Created new zip file located in $(DeploymentDir)" />
+      
+   </Target>
+   
+</Project>
