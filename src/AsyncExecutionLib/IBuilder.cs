@@ -64,6 +64,6 @@ namespace OnyxOx.AsyncExecutionLib
       /// </summary>
       /// <typeparam name="T">Type of the object.</typeparam>
       /// <param name="instance">Instance to register.</param>
-      void RegisterInstance<T>(T instance);
+      void RegisterInstance<T>(T instance) where T : class;
    }
 }

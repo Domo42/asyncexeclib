@@ -19,12 +19,12 @@
 namespace OnyxOx.AsyncExecutionLib
 {
    using System;
-   using StructureMap;
+   using Autofac;
 
    /// <summary>
    /// Builds instances with the help of StructureMap.
    /// </summary>
-   public class StructureMapBuilder : IBuilder
+   public class AutofacBuilder : IBuilder
    {
       /// <summary>
       /// The structure map container.
@@ -32,16 +32,9 @@ namespace OnyxOx.AsyncExecutionLib
       private readonly IContainer _container;
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="StructureMapBuilder"/> class.
+      /// Initializes a new instance of the <see cref="AutofacBuilder"/> class.
       /// </summary>
-      public StructureMapBuilder() : this(ObjectFactory.Container)
-      {
-      }
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="StructureMapBuilder"/> class.
-      /// </summary>
-      public StructureMapBuilder(IContainer container)
+      public AutofacBuilder(IContainer container)
       {
          _container = container;
       }
@@ -53,7 +46,7 @@ namespace OnyxOx.AsyncExecutionLib
       /// <returns>Type instance.</returns>
       public object GetInstance(Type type)
       {
-         return _container.GetInstance(type);
+         return _container.Resolve(type);
       }
 
       /// <summary>
@@ -63,7 +56,7 @@ namespace OnyxOx.AsyncExecutionLib
       /// <returns>Object instance.</returns>
       public T GetInstance<T>()
       {
-         return _container.GetInstance<T>();
+         return _container.Resolve<T>();
       }
 
       /// <summary>
@@ -72,7 +65,9 @@ namespace OnyxOx.AsyncExecutionLib
       /// <param name="msgHandlerType">Target type</param>
       public void RegisterMsgHandlerType(Type msgHandlerType)
       {
-         _container.Configure(x => x.For(msgHandlerType).LifecycleIs(InstanceScope.PerRequest).Use(msgHandlerType));
+         var builder = new ContainerBuilder();
+         builder.RegisterType(msgHandlerType);
+         builder.Update(_container);
       }
 
       /// <summary>
@@ -82,7 +77,9 @@ namespace OnyxOx.AsyncExecutionLib
       /// <param name="concreteType">The concrete type implementing the instance type.</param>
       public void RegisterSingleton(Type pluginType, Type concreteType)
       {
-         _container.Configure(x => x.For(pluginType).Singleton().Use(concreteType));
+         var builder = new ContainerBuilder();
+         builder.RegisterType(concreteType).As(pluginType).SingleInstance();
+         builder.Update(_container);
       }
 
       /// <summary>
@@ -92,7 +89,9 @@ namespace OnyxOx.AsyncExecutionLib
       /// <param name="concreteType">The concrete type implementing the instance type.</param>
       public void Register(Type pluginType, Type concreteType)
       {
-         _container.Configure(x => x.For(pluginType).Use(concreteType));
+         var builder = new ContainerBuilder();
+         builder.RegisterType(concreteType).As(pluginType);
+         builder.Update(_container);
       }
 
       /// <summary>
@@ -102,7 +101,9 @@ namespace OnyxOx.AsyncExecutionLib
       /// <param name="instance">Instance to register.</param>
       public void RegisterInstance<T>(T instance) where T : class
       {
-         _container.Configure(x => x.For<T>().Use(instance));
+         var builder = new ContainerBuilder();
+         builder.RegisterInstance(instance);
+         builder.Update(_container);
       }
    }
 }

@@ -5,7 +5,11 @@ This software is using the following 3rd party software libraries at runtime:
 
 * StructureMap
 http://structuremap.net/structuremap/
-Licensed unter the Apache License, Version 2.0
+Licensed under the Apache License, Version 2.0
+
+* Autofac
+http://code.google.com/p/autofac/
+Licensed under The MIT License (MIT)
 
 
 Additionally the following libraries where used to help during development:

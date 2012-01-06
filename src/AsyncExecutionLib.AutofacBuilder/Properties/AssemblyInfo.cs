@@ -1,22 +1,3 @@
-#region [ File Header ]
-/*****************************************************************************
-  Copyright 2011 Stefan Domnanovits
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
- 
-      http://www.apache.org/licenses/LICENSE-2.0
- 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-/****************************************************************************/
-#endregion
-
-using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -24,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OnyxOx.ExecutionLib.StructureMapBuilder")]
+[assembly: AssemblyTitle("AsyncExecutionLib.AutofacBuilder")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("OnyxOx ExecutionLib StructureMapBuilder")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("AsyncExecutionLib.AutofacBuilder")]
+[assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -39,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("32b737e5-bc54-4900-9734-0a852e9e480a")]
+[assembly: Guid("ac360251-9bc6-44a6-9e14-4c5301fbb85f")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -53,4 +34,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.1.0")]
 [assembly: AssemblyFileVersion("1.0.1.0")]
-[assembly: CLSCompliant(false)]
