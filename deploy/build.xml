@@ -9,13 +9,14 @@
       <DeploymentDir>$(MSBuildProjectDirectory)\out</DeploymentDir>
       <ExecLibOutDir>..\src\AsyncExecutionLib\bin\$(Configuration)</ExecLibOutDir>
       <SmBuilderOutDir>..\src\AsyncExecutionLib.StructureMapBuilder\bin\$(Configuration)</SmBuilderOutDir>
+      <AfBuilderOutDir>..\src\AsyncExecutionLib.AutofacBuilder\bin\$(Configuration)</AfBuilderOutDir>
    </PropertyGroup>
 
    <!-- ====== Define the target assembly version number ===== -->
    <PropertyGroup>
       <MajorVersion>1</MajorVersion>
       <MinorVersion>0</MinorVersion>
-      <BuildVersion>0</BuildVersion>
+      <BuildVersion>1</BuildVersion>
       <VersionNumber>$(MajorVersion).$(MinorVersion).$(BuildVersion).0</VersionNumber>
    </PropertyGroup>
 
@@ -26,6 +27,10 @@
       <AsyncLibraryFiles Include="$(SmBuilderOutDir)\OnyxOx.AsyncExecutionLib.StructureMapBuilder.xml" />
       <AsyncLibraryFiles Include="$(SmBuilderOutDir)\StructureMap.dll" />
       <AsyncLibraryFiles Include="$(SmBuilderOutDir)\StructureMap.xml" />
+      <AsyncLibraryFiles Include="$(AfBuilderOutDir)\OnyxOx.AsyncExecutionLib.AutofacBuilder.dll" />
+      <AsyncLibraryFiles Include="$(AfBuilderOutDir)\OnyxOx.AsyncExecutionLib.AutofacBuilder.XML" />
+      <AsyncLibraryFiles Include="$(AfBuilderOutDir)\Autofac.dll" />
+      <AsyncLibraryFiles Include="$(AfBuilderOutDir)\Autofac.xml" />
       <AsyncLibraryFiles Include="..\LICENSE.txt" />
       <AsyncLibraryFiles Include="disclaimer.txt" />
    </ItemGroup>
