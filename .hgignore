@@ -4,3 +4,5 @@ relre:_ReSharper.*
 relre:.*/bin/.*
 relre:.*/obj/.*
 relre:deploy/out/.*
+syntax: glob
+*.ReSharper
