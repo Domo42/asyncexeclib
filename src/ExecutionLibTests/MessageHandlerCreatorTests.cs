@@ -60,7 +60,7 @@ namespace ExecutionLibTests
       public void Create_NullMessage_ReturnsNotNull()
       {
          // given
-         IMessage msg = null;
+         object msg = null;
 
          // when
          var retVal = _sut.Create(msg);

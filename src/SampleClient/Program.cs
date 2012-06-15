@@ -40,7 +40,7 @@
    /// <summary>
    /// Custom message used in handler
    /// </summary>
-   public class MyMessage : IMessage
+   public class MyMessage
    {
       /// <summary>
       /// Message text
@@ -66,9 +66,9 @@
    /// <summary>
    /// Message handler machting any base IMessage.
    /// </summary>
-   public class LogMessageHandler : IMessageHandler<IMessage>
+   public class LogMessageHandler : IMessageHandler<object>
    {
-      public void Handle(IMessage message)
+      public void Handle(object message)
       {
          Console.WriteLine();
          Console.WriteLine("LogMessageHandler: Message of type '{0}' received.", message.GetType().Name);

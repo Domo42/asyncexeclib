@@ -29,7 +29,7 @@ namespace OnyxOx.AsyncExecutionLib
       /// Add a message to be handled.
       /// </summary>
       /// <param name="message">The message to handle.</param>
-      void Add(IMessage message);
+      void Add<T>(T message) where T : class;
 
       /// <summary>
       /// Action to be executed.
@@ -42,6 +42,6 @@ namespace OnyxOx.AsyncExecutionLib
       /// the message into the configured execution pipe.
       /// </summary>
       /// <param name="message">The message to handle.</param>
-      void Handle(IMessage message);
+      void Handle<T>(T message) where T : class;
    }
 }

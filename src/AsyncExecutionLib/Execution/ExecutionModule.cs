@@ -77,7 +77,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// Add a message to be handled.
       /// </summary>
       /// <param name="message">The message</param>
-      public virtual void Add(IMessage message)
+      public virtual void Add<T>(T message) where T : class
       {
          IJob job = CreateMessageHandlerExecutionJob(message);
          _execPipe.Add(job);
@@ -97,7 +97,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// the message into the configured execution pipe.
       /// </summary>
       /// <param name="message">The message to handle.</param>
-      public void Handle(IMessage message)
+      public void Handle<T>(T message) where T : class
       {
          IJob job = CreateMessageHandlerExecutionJob(message);
          job.Execute();
@@ -107,7 +107,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// Creates the job for message handler execution.
       /// </summary>
       /// <returns>The created job instance.</returns>
-      private IJob CreateMessageHandlerExecutionJob(IMessage message)
+      private IJob CreateMessageHandlerExecutionJob<T>(T message) where T : class
       {
          Type msgType = message.GetType();
          Type jobType = _handlerJobTypes.GetOrAdd(msgType, t => typeof(MessageHandlerExecutionJob<>).MakeGenericType(t));

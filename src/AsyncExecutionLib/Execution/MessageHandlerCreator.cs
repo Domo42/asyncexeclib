@@ -68,7 +68,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// </summary>
       /// <param name="message">The message to be handled.</param>
       /// <returns>A list of message handlers able to handle the given message.</returns>
-      public IEnumerable<IMessageHandler<TMessage>> Create<TMessage>(TMessage message) where TMessage : IMessage
+      public IEnumerable<IMessageHandler<TMessage>> Create<TMessage>(TMessage message) where TMessage : class
       {
          IEnumerable<IMessageHandler<TMessage>> handlerInstances;
 
@@ -88,7 +88,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       }
 
       /// <summary>
-      /// Sets a a prefered execution order for message handler types.
+      /// Sets a a preferred execution order for message handler types.
       /// </summary>
       /// <param name="handlers">List of message handler types in expected order.</param>
       public void SetPreferredOrder(IEnumerable<Type> handlers)
@@ -125,8 +125,8 @@ namespace OnyxOx.AsyncExecutionLib.Execution
             targetType = targetType.BaseType;
          }
 
-         // check for msg interface handlers
-         var interfaces = msgType.GetInterfaces().Where(x => typeof(IMessage).IsAssignableFrom(x));
+         // check for msg interface handlers (ex. IResponse, ...)
+         var interfaces = msgType.GetInterfaces();
          foreach (Type interfaceType in interfaces)
          {
             List<Type> msgHandlers;
@@ -145,14 +145,14 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       }
 
       /// <summary>
-      /// If set, puts prefered handlers in front.
+      /// If set, puts preferred handlers in front.
       /// </summary>
       /// <returns>Sorted collection.</returns>
       private List<Type> CreatePreferredExecutionOrder(List<Type> unsortedHandlers)
       {
          List<Type> sorted = new List<Type>();
 
-         // Search for prefered types and put them in front.
+         // Search for preferred types and put them in front.
          foreach (Type sortedType in _preferedOrder.Reverse())
          {
             foreach (Type unsortedType in unsortedHandlers)
@@ -161,7 +161,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
                {
                   if (!sorted.Contains(unsortedType))
                   {
-                     // put in front if prefered to be executed before
+                     // put in front if preferred to be executed before
                      // unspecified ones.
                      sorted.Insert(0, unsortedType);
                   }
@@ -182,7 +182,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       }
 
       /// <summary>
-      /// Searches for all handlers and creates a handler chain called if a specfici message is
+      /// Searches for all handlers and creates a handler chain called if a specific message is
       /// to be handled.
       /// </summary>
       private void GroupHandlersByHandledTypes()
