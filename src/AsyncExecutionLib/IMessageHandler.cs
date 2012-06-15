@@ -22,7 +22,7 @@ namespace OnyxOx.AsyncExecutionLib
    /// Handles custom messages.
    /// </summary>
    /// <typeparam name="TMessage">Type of message to handle.</typeparam>
-   public interface IMessageHandler<in TMessage> where TMessage : IMessage
+   public interface IMessageHandler<in TMessage> where TMessage : class
    {
       /// <summary>
       /// Handles the message.

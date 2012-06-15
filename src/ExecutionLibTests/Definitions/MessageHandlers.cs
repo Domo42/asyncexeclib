@@ -35,13 +35,13 @@ namespace ExecutionLibTests
       }
    }
 
-   public class InterfaceMessageHandler : MessageHandlerBase, IMessageHandler<IMessage>
+   public class InterfaceMessageHandler : MessageHandlerBase, IMessageHandler<object>
    {
       /// <summary>
       /// Handles the specified message.
       /// </summary>
       /// <param name="message">The message.</param>
-      public void Handle(IMessage message)
+      public void Handle(object message)
       {
          OnHandlerCalled();
       }

@@ -28,7 +28,7 @@ namespace OnyxOx.AsyncExecutionLib
       /// <summary>
       /// Gets the currently processed message.
       /// </summary>
-      IMessage Message { get; }
+      object Message { get; }
 
       /// <summary>
       /// Gets or sets a value indicating whether to stop executing further handler

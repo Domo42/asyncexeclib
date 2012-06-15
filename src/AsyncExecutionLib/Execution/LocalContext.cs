@@ -30,7 +30,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// The message to which this context is assigned to.
       /// </summary>
       [ThreadStatic]
-      private static IMessage _message;
+      private static object _message;
 
       /// <summary>
       /// Holds a list of thread local entries.
@@ -48,7 +48,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// Initializes the current execution context with the given message.
       /// Clears any previous data.
       /// </summary>
-      public void Initialize(IMessage message)
+      public void Initialize(object message)
       {
          _stopHandlingMessages = false;
          _message = message;
@@ -64,7 +64,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       /// <summary>
       /// Gets the currently processed message.
       /// </summary>
-      public IMessage Message
+      public object Message
       {
          get { return _message; }
       }

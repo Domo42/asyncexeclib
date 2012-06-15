@@ -15,8 +15,8 @@
    <!-- ====== Define the target assembly version number ===== -->
    <PropertyGroup>
       <MajorVersion>1</MajorVersion>
-      <MinorVersion>0</MinorVersion>
-      <BuildVersion>1</BuildVersion>
+      <MinorVersion>1</MinorVersion>
+      <BuildVersion>0</BuildVersion>
       <VersionNumber>$(MajorVersion).$(MinorVersion).$(BuildVersion).0</VersionNumber>
    </PropertyGroup>
 

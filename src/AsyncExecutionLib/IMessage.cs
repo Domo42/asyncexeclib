@@ -18,8 +18,12 @@
 
 namespace OnyxOx.AsyncExecutionLib
 {
+   using System;
+
    /// <summary>
-   /// Marker interface for all messages added into the execution module.
+   /// Interface previously used to identify messages added to the module.
+   /// It is no longer needed. The execution module accepts all types of
+   /// classes now.
    /// </summary>
    public interface IMessage
    {

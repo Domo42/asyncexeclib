@@ -24,7 +24,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
    /// Executes message handlers for the given message.
    /// </summary>
    /// <typeparam name="TMessage">Type of the message to handle.</typeparam>
-   public class MessageHandlerExecutionJob<TMessage> : IJob where TMessage : IMessage
+   public class MessageHandlerExecutionJob<TMessage> : IJob where TMessage : class
    {
       /// <summary>
       /// The message to handle.
@@ -37,7 +37,7 @@ namespace OnyxOx.AsyncExecutionLib.Execution
       private readonly IMessageHandlerCreator _handlerCreator;
 
       /// <summary>
-      /// Respsonsible to for message modules.
+      /// Responsible to for message modules.
       /// </summary>
       private readonly IModuleManager _moduleManager;
 

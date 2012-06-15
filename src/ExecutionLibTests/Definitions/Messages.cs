@@ -23,7 +23,7 @@ namespace ExecutionLibTests
    /// <summary>
    /// Message base class.
    /// </summary>
-   public abstract class MessageBase : IMessage
+   public abstract class MessageBase
    {
    }
 
@@ -31,7 +31,7 @@ namespace ExecutionLibTests
    {
    }
 
-   public class SeparateMessage : IMessage
+   public class SeparateMessage
    {
    }
 }

@@ -45,7 +45,7 @@ namespace ExecutionLibTests
       /// <summary>
       /// The actual message handled.
       /// </summary>
-      private IMessage _message;
+      private object _message;
 
       /// <summary>
       /// Message handler used to extract the msg instance given my module.
@@ -161,16 +161,16 @@ namespace ExecutionLibTests
 
       #region [ Support ]
 
-      private class ExtractHandledMessageHandler : IMessageHandler<IMessage>
+      private class ExtractHandledMessageHandler : IMessageHandler<object>
       {
-         private readonly Action<IMessage> _extrator;
+         private readonly Action<object> _extrator;
 
-         public ExtractHandledMessageHandler(Action<IMessage> extractor)
+         public ExtractHandledMessageHandler(Action<object> extractor)
          {
             _extrator = extractor;
          }
 
-         public void Handle(IMessage message)
+         public void Handle(object message)
          {
             _extrator(message);
          }
