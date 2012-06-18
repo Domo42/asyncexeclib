@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\ext\autofac\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\..\ext\structuremap\StructureMap.dll</HintPath>
     </Reference>
@@ -54,9 +57,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AsyncExecutionLib.StructureMapBuilder\OnyxOx.AsyncExecutionLib.StructureMapBuilder.csproj">
-      <Project>{D636713F-0A84-4A30-92A4-6CA631A8727E}</Project>
-      <Name>OnyxOx.AsyncExecutionLib.StructureMapBuilder</Name>
+    <ProjectReference Include="..\AsyncExecutionLib.AutofacBuilder\AsyncExecutionLib.AutofacBuilder.csproj">
+      <Project>{345EE81E-7792-4886-8BCD-1D4688301FE4}</Project>
+      <Name>AsyncExecutionLib.AutofacBuilder</Name>
     </ProjectReference>
     <ProjectReference Include="..\AsyncExecutionLib\OnyxOx.AsyncExecutionLib.csproj">
       <Project>{5960BEA1-1CB9-4655-AA44-C97DF3A412AB}</Project>
