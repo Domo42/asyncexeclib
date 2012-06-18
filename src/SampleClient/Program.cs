@@ -16,22 +16,27 @@
          // give us some space.
          Console.WriteLine();
 
-         // create a module instance with default settings.
-         var execModule = Module.Configure()
-                           .UseStructureMap()
-                           .FirstExecute<LogMessageHandler>()
-                           .Build();
+         // initialize the Autofac DI container.
+         var afBuilder = new Autofac.ContainerBuilder();
+         using (var container = afBuilder.Build())
+         {
+            // create a module instance with default settings.
+            var execModule = Module.Configure()
+                  .UseAutofac(container)
+                  .FirstExecute<LogMessageHandler>()
+                  .Build();
 
-         // create a new message to be handled.
-         var msg = new MyMessage { Text = "Hello message handler!" };
+            // create a new message to be handled.
+            var msg = new MyMessage { Text = "Hello message handler!" };
 
-         // add the message to the execution module.
-         execModule.Add(msg);
+            // add the message to the execution module.
+            execModule.Add(msg);
 
-         // message handler will be exeucted on a separate thread,
-         // therefore we wait until satisfied.
-         Console.WriteLine("Press any key to quit.");
-         Console.ReadKey();
+            // message handler will be exeucted on a separate thread,
+            // therefore we wait until satisfied.
+            Console.WriteLine("Press any key to quit.");
+            Console.ReadKey();
+         }
       }
    }
 
@@ -64,7 +69,7 @@
    }
 
    /// <summary>
-   /// Message handler machting any base IMessage.
+   /// Message handler matching any base IMessage.
    /// </summary>
    public class LogMessageHandler : IMessageHandler<object>
    {
