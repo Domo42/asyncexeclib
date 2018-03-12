@@ -1,6 +1,6 @@
 # Disclaimer
 
-This repo is a copy of a codeplex project I did some years ago on
+This repo is a copy of a project I did some years ago on
 [CodePlex](https://archive.codeplex.com/?p=asyncexeclib). I'm no longer
 maintaining the project, as I've switched to Java development in my professional
 career years ago and my C# skills became rusty as a result. Many of my learnings
